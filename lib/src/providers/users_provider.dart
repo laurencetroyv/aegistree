@@ -4,7 +4,7 @@ import 'package:aegistree/src/entities/user_entity.dart';
 
 part 'users_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UsersProvider extends _$UsersProvider {
   @override
   UserEntity build() {

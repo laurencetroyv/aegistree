@@ -1,8 +1,10 @@
+import 'package:flutter/services.dart';
+
 class DiseaseEntity {
   final String id;
   final String name;
   final String description;
-  final String image;
+  final Uint8List image;
   final DateTime createdAt;
   final DateTime? updatedAt;
 

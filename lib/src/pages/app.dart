@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:aegistree/src/components/text/inknut_antiqua.dart';
+import 'package:aegistree/src/constants/index.dart';
 import 'package:aegistree/src/entities/user_entity.dart';
 import 'package:aegistree/src/pages/app/diagnose.dart';
 import 'package:aegistree/src/providers/users_provider.dart';
@@ -38,16 +39,16 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
-    UserEntity user = ref.read(usersProviderProvider);
+    UserEntity user = ref.watch(usersProviderProvider);
 
     final avatarIcon = CircleAvatar(
       backgroundImage: NetworkImage(user.avatar),
-      radius: 24,
+      radius: kXtraLarge,
     );
 
     const learningResources = InknutAntiqua(
-      "Learning Resources",
-      fontSize: 20,
+      kLearningResources,
+      fontSize: kLarge,
       fontWeight: FontWeight.w500,
     );
 
@@ -73,23 +74,23 @@ class _AppState extends ConsumerState<App> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            label: kDashboard,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.photo_camera),
-            label: 'Diagnose',
+            label: kDiagnose,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_library),
-            label: 'Learn',
+            label: kLearn,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: kProfile,
           ),
         ],
         currentIndex: _index,
-        selectedItemColor: const Color(0xFF48BD1F),
+        selectedItemColor: primaryColor,
         unselectedItemColor: Colors.grey,
         onTap: _onNavIconTapped,
       ),

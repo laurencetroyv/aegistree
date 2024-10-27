@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:aegistree/src/components/chart.dart';
+import 'package:aegistree/src/components/index.dart';
 import 'package:aegistree/src/components/leaf_album.dart';
 import 'package:aegistree/src/entities/entities.dart';
+import 'package:aegistree/src/pages/app/diagnose.dart';
 import 'package:aegistree/src/providers/leafs_provider.dart';
 import 'package:aegistree/src/providers/users_provider.dart';
 
@@ -14,9 +17,9 @@ class Dashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.read(usersProviderProvider);
+    final user = ref.watch(usersProviderProvider);
 
-    final List<LeafEntity> leafs = ref.read(leafsProvider);
+    final List<LeafEntity> leafs = ref.watch(leafsProvider);
 
     return Scaffold(
       body: Padding(
@@ -50,19 +53,34 @@ class Dashboard extends ConsumerWidget {
               ),
             ),
             const Gap(32),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 187, 233, 170),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: const DiseaseDetectionChart(),
+            ),
+            const Gap(32),
             Expanded(
               child: LeafAlbumGrid(
                 leafs,
-                maxImages: 12,
+                maxImages: leafs.length <= 12 ? leafs.length : 12,
                 title: "Leaf Album",
                 moreButton: true,
               ),
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return const Diagnose();
+            },
+          ));
+        },
         tooltip: 'Add New',
         label: Text(
           "+ Add New",

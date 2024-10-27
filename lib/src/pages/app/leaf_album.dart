@@ -5,8 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:aegistree/src/components/leaf_album_categories.dart';
-import 'package:aegistree/src/entities/entities.dart';
-import 'package:aegistree/src/providers/leafs_provider.dart';
+import 'package:aegistree/src/pages/app/diagnose.dart';
+import 'package:aegistree/src/providers/album_provider.dart';
 import 'package:aegistree/src/providers/users_provider.dart';
 
 class LeafAlbum extends ConsumerWidget {
@@ -14,13 +14,8 @@ class LeafAlbum extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.read(usersProviderProvider);
-    final List<LeafEntity> leafs = ref.read(leafsProvider);
-    final List<LeafAlbumEntity> albums = [
-      LeafAlbumEntity(id: "0", title: 'Anthracnose', leafs: leafs),
-      LeafAlbumEntity(id: "1", title: 'Leaf Spot', leafs: leafs),
-      LeafAlbumEntity(id: "2", title: 'Rust', leafs: leafs),
-    ];
+    final user = ref.watch(usersProviderProvider);
+    final albums = ref.watch(albumProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +34,7 @@ class LeafAlbum extends ConsumerWidget {
           children: [
             const Gap(16),
             Text(
-              "Leaf Disease",
+              "Leaf Diseases",
               style: GoogleFonts.inknutAntiqua(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
@@ -68,7 +63,13 @@ class LeafAlbum extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return const Diagnose();
+            },
+          ));
+        },
         tooltip: 'Add New',
         label: Text(
           "+ Add New",

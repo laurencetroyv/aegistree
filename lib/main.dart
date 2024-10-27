@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:aegistree/src/constants/index.dart';
 import 'package:aegistree/src/pages/app.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    const ProviderScope(child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,21 +18,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: kAppTitle,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF48BD1F)),
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         useMaterial3: true,
         textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
             textStyle: WidgetStatePropertyAll(
-              GoogleFonts.inknutAntiqua().copyWith(fontSize: 20),
+              GoogleFonts.inknutAntiqua().copyWith(fontSize: kLarge),
             ),
           ),
         ),
         filledButtonTheme: FilledButtonThemeData(
           style: ButtonStyle(
             textStyle: WidgetStatePropertyAll(
-              GoogleFonts.inknutAntiqua().copyWith(fontSize: 20),
+              GoogleFonts.inknutAntiqua().copyWith(fontSize: kLarge),
             ),
           ),
         ),

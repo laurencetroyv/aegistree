@@ -4,9 +4,11 @@ class CustomImageAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomImageAppBar({
     super.key,
     this.path = 'assets/images/plant-hand-bg.png',
+    this.hasBackButton = true,
   });
 
   final String path;
+  final bool hasBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +20,27 @@ class CustomImageAppBar extends StatelessWidget implements PreferredSizeWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
+      child: hasBackButton
+          ? SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.3),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        ),
-      ),
+            )
+          : null,
     );
   }
 

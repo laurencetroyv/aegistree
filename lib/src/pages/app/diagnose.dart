@@ -10,6 +10,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 import 'package:aegistree/src/components/index.dart';
+import 'package:aegistree/src/functions/detection.dart';
+import 'package:aegistree/src/providers/diseases_provider.dart';
+import 'package:aegistree/src/providers/leafs_provider.dart';
+
+import 'camera_screen.dart';
 
 class Diagnose extends ConsumerStatefulWidget {
   const Diagnose({super.key});
@@ -21,6 +26,9 @@ class Diagnose extends ConsumerStatefulWidget {
 class _DiagnoseState extends ConsumerState<Diagnose> {
   bool isAsset = true;
   late Uint8List bytes;
+  bool detectionDone = false;
+  late String diseaseName;
+
   @override
   Widget build(BuildContext context) {
     final style = ButtonStyle(
@@ -35,7 +43,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
     );
 
     return Scaffold(
-      appBar: const CustomImageAppBar(),
+      appBar: const CustomImageAppBar(hasBackButton: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -55,7 +63,21 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                   SizedBox(
                     width: 175,
                     child: FilledButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final response = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return const CameraScreen();
+                          }),
+                        );
+
+                        if (response != null) {
+                          bytes = response as Uint8List;
+                          setState(() {
+                            isAsset = false;
+                          });
+                        }
+                      },
                       style: style,
                       child: const Text("START CAMERA"),
                     ),
@@ -99,21 +121,66 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                 width: 300,
                 child: FilledButton(
                   onPressed: () async {
-                    final interpreter =
-                        await Interpreter.fromAsset("assets/models/1.tflite");
+                    final interpreter = await Interpreter.fromAsset(
+                      "assets/models/1.tflite",
+                      options: InterpreterOptions()..threads = 4,
+                    );
 
-                    print(interpreter);
+                    final detection =
+                        LeafDetectionService(interpreter: interpreter);
+
+                    final response = await detection.detectLeaf(bytes);
+                    final first = response.entries.first;
+
+                    setState(() {
+                      diseaseName = first.key.replaceAll("_", " ");
+                      detectionDone = true;
+                    });
+
+                    final disease = ref
+                        .read(diseaseProvider.notifier)
+                        .addDisease(
+                            diseaseName, "Something Description", bytes);
+
+                    ref.read(leafsProvider.notifier).addLeaf(disease.id, bytes);
                   },
                   style: style,
                   child: const Text("DETECT"),
                 ),
               ),
-            if (!isAsset) const Gap(32),
+            if (detectionDone) const Gap(8),
+            if (detectionDone)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Inter("Type of Disease: "),
+                  Inter(
+                    diseaseName,
+                    color: const Color(0xFFEA592C),
+                  ),
+                ],
+              ),
+            if (!isAsset) const Gap(24),
             if (isAsset)
               SizedBox(
                 width: 200,
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final response = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const CameraScreen();
+                      }),
+                    );
+
+                    if (response != null) {
+                      bytes = response as Uint8List;
+                      setState(() {
+                        isAsset = false;
+                      });
+                    }
+                  },
                   style: style,
                   child: const Text("START CAMERA"),
                 ),
@@ -126,26 +193,27 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
-                        return const Dialog(
+                        return Dialog(
                           child: Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Inter(
-                                  "Leaf Spot Solution",
+                                  "$diseaseName Solution",
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
+                                  textAlign: TextAlign.center,
                                 ),
-                                Gap(6),
-                                SolutionBullet(
+                                const Gap(6),
+                                const SolutionBullet(
                                     "Rake up and destroy fallen leaves before the first snowfall to eliminate locations where diseases can survive to re-infect the plant the following growing season."),
-                                Gap(6),
-                                SolutionBullet(
+                                const Gap(6),
+                                const SolutionBullet(
                                     "Do not overcrowd plants — use size at maturity as a spacing guide when planting."),
-                                SolutionBullet(
+                                const SolutionBullet(
                                     "Prune trees or shrubs to increase light penetration and improve air circulation throughout the canopy."),
-                                SolutionBullet(
+                                const SolutionBullet(
                                     "Wet conditions promote disease, so water trees at the base and be careful not to splash water on leaves. A drip or soaker hose works best for this. Avoid sprinklers."),
                               ],
                             ),
@@ -186,26 +254,27 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
-                        return const Dialog(
+                        return Dialog(
                           child: Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Inter(
-                                  "Learn more about Leaf Spot!",
+                                  "Learn more about $diseaseName!",
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
+                                  textAlign: TextAlign.center,
                                 ),
-                                Gap(6),
-                                SolutionBullet(
+                                const Gap(6),
+                                const SolutionBullet(
                                     "Leaf spot diseases weaken trees and shrubs by interrupting photosynthesis."),
-                                Gap(6),
-                                SolutionBullet(
+                                const Gap(6),
+                                const SolutionBullet(
                                     "Most leaf spot diseases affect only a small percentage of the tree's overall leaf area, and are a minor stress on the health of the tree."),
-                                SolutionBullet(
+                                const SolutionBullet(
                                     "Leaf spot diseases should be taken seriously if they result in moderate to complete leaf loss two to four years in a row."),
-                                SolutionBullet(
+                                const SolutionBullet(
                                     "Leaf loss during several consecutive growing seasons can result in reduced growth and increased susceptibility to pests and other diseases."),
                               ],
                             ),

@@ -25,8 +25,8 @@ class LeafDetails extends StatelessWidget {
             children: [
               Expanded(
                 flex: 4,
-                child: Image.network(
-                  leaf.path,
+                child: Image.memory(
+                  leaf.image,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
@@ -126,16 +126,11 @@ class LeafDetails extends StatelessWidget {
                               Expanded(
                                 child: TabBarView(
                                   children: [
-                                    ActionTab(
-                                      scrollController,
-                                      image: leaf.path,
-                                    ),
-                                    RequirementTab(
-                                      scrollController,
-                                      image: leaf.path,
-                                    ),
+                                    ActionTab(scrollController),
+                                    RequirementTab(scrollController),
                                     const Center(
-                                        child: Text('History Content')),
+                                      child: Text('History Content'),
+                                    ),
                                   ],
                                 ),
                               ),

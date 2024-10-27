@@ -51,9 +51,7 @@ class LeafGrid extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8),
                       color: Theme.of(context).primaryColor,
                       image: DecorationImage(
-                        image: NetworkImage(
-                          leafs[index].path,
-                        ),
+                        image: MemoryImage(leafs[index].image),
                       ),
                     ),
                   ),

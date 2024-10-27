@@ -12,12 +12,11 @@ import 'requirements_item.dart';
 class RequirementTab extends ConsumerWidget {
   final ScrollController scrollController;
 
-  const RequirementTab(this.scrollController, {super.key, required this.image});
-  final String image;
+  const RequirementTab(this.scrollController, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final leafs = ref.read(leafsProvider);
+    final leafs = ref.watch(leafsProvider);
 
     return ListView(
       controller: scrollController,

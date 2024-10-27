@@ -11,10 +11,10 @@ class Koho extends ConsumerWidget {
     this.shadow,
     this.textAlign,
     this.fontWeight,
-    this.size = 16,
+    this.fontSize = 16,
   });
   final String text;
-  final double size;
+  final double fontSize;
   final Color? color;
   final TextAlign? textAlign;
   final List<Shadow>? shadow;
@@ -27,7 +27,7 @@ class Koho extends ConsumerWidget {
       textAlign: textAlign,
       style: GoogleFonts.koHo(
         color: color,
-        fontSize: size,
+        fontSize: fontSize,
         shadows: shadow,
         fontWeight: fontWeight,
       ),

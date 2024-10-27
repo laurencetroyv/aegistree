@@ -13,7 +13,7 @@ class DiseaseDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articles = ref.read(articleProvider);
+    final articles = ref.watch(articleProvider);
 
     final defaultShadow = BoxShadow(
       color: Colors.black.withOpacity(.25),
@@ -37,7 +37,7 @@ class DiseaseDetails extends ConsumerWidget {
             const Gap(24),
             Row(
               children: [
-                Image.network(
+                Image.memory(
                   disease.image,
                   width: 100,
                   height: 100,

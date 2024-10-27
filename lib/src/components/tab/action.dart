@@ -12,12 +12,11 @@ import 'action_item.dart';
 class ActionTab extends ConsumerWidget {
   final ScrollController scrollController;
 
-  const ActionTab(this.scrollController, {super.key, required this.image});
-  final String image;
+  const ActionTab(this.scrollController, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final leafs = ref.read(leafsProvider);
+    final leafs = ref.watch(leafsProvider);
 
     return ListView(
       controller: scrollController,

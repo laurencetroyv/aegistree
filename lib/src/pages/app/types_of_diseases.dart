@@ -79,7 +79,7 @@ class TypesOfDiseases extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(child: Image.network(disease.image)),
+                            Expanded(child: Image.memory(disease.image)),
                             const Gap(12),
                             Koho(
                               disease.name,

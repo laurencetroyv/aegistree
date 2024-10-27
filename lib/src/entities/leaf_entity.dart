@@ -1,13 +1,15 @@
+import 'package:flutter/services.dart';
+
 class LeafEntity {
   final String id;
   final String type;
-  final String path;
+  final Uint8List image;
   final DateTime createdAt;
 
   LeafEntity({
     required this.id,
     required this.type,
-    required this.path,
+    required this.image,
     required this.createdAt,
   });
 

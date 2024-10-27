@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:aegistree/src/entities/entities.dart';
@@ -5,22 +7,32 @@ import 'package:aegistree/src/providers/leafs_provider.dart';
 
 part 'diseases_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Disease extends _$Disease {
   @override
   List<DiseaseEntity> build() {
-    return List.generate(
-      7,
-      (_) {
-        final id = uuid.v4();
-        return DiseaseEntity(
-          id: id,
-          name: id.split("-")[0],
-          description: id,
-          image: "https://robohash.org/$id?set=set4",
-          createdAt: DateTime.now(),
-        );
-      },
-    );
+    return [];
+  }
+
+  DiseaseEntity addDisease(String name, String description, Uint8List bytes) {
+    final index = checkDisease(name);
+    if (index == -1) {
+      final disease = DiseaseEntity(
+        id: uuid.v4(),
+        name: name,
+        description: description,
+        image: bytes,
+        createdAt: DateTime.now(),
+      );
+
+      state = [...state, disease];
+      return disease;
+    }
+
+    return state[index];
+  }
+
+  int checkDisease(String name) {
+    return state.indexWhere((value) => value.name == name);
   }
 }
