@@ -1,43 +1,41 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'package:aegistree/src/constants/index.dart';
-import 'package:aegistree/src/pages/app.dart';
+import 'package:aegistree/src/src.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await DependencyInjector().init();
+
   runApp(
     const ProviderScope(child: MyApp()),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(usersProvider);
+
     return MaterialApp(
       title: kAppTitle,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
-        useMaterial3: true,
-        textButtonTheme: TextButtonThemeData(
-          style: ButtonStyle(
-            textStyle: WidgetStatePropertyAll(
-              GoogleFonts.inknutAntiqua().copyWith(fontSize: kLarge),
-            ),
-          ),
-        ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: ButtonStyle(
-            textStyle: WidgetStatePropertyAll(
-              GoogleFonts.inknutAntiqua().copyWith(fontSize: kLarge),
-            ),
-          ),
-        ),
-      ),
-      home: const App(),
+      debugShowCheckedModeBanner: false,
+      theme: Themes().lightTheme,
+      home: _route(user),
     );
+  }
+
+  Widget _route(UserEntity? user) {
+    if (user == null) {
+      return const WelcomeScreen();
+    } else if (user.avatar == null) {
+      return const UserWelcomeScreen();
+    } else {
+      return const App();
+    }
   }
 }

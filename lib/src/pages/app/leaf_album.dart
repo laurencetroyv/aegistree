@@ -4,17 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:aegistree/src/components/leaf_album_categories.dart';
-import 'package:aegistree/src/pages/app/diagnose.dart';
-import 'package:aegistree/src/providers/album_provider.dart';
-import 'package:aegistree/src/providers/users_provider.dart';
+import 'package:aegistree/src/src.dart';
 
 class LeafAlbum extends ConsumerWidget {
   const LeafAlbum({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(usersProviderProvider);
+    final user = ref.watch(usersProvider)!;
     final albums = ref.watch(albumProvider);
 
     return Scaffold(

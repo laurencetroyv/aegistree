@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import 'package:aegistree/src/components/index.dart';
-import 'package:aegistree/src/pages/app/cultural_management.dart';
+import 'package:aegistree/src/src.dart';
 
 class PreventionManagement extends ConsumerWidget {
   const PreventionManagement({super.key});

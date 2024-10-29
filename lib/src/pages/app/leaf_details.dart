@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-import 'package:aegistree/src/components/index.dart';
-import 'package:aegistree/src/entities/entities.dart';
+import 'package:aegistree/src/src.dart';
 
 class LeafDetails extends StatelessWidget {
   const LeafDetails(
@@ -62,17 +61,7 @@ class LeafDetails extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      stops: [0.38, 1.0],
-                      colors: [
-                        Color(0xFFC5FBB3),
-                        Color(0x00C5FBB3),
-                      ],
-                    ),
-                  ),
+                  decoration: const BoxDecoration(gradient: gradient),
                   child: Column(
                     children: [
                       Padding(

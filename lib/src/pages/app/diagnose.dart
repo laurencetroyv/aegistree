@@ -9,12 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
-import 'package:aegistree/src/components/index.dart';
-import 'package:aegistree/src/functions/detection.dart';
-import 'package:aegistree/src/providers/diseases_provider.dart';
-import 'package:aegistree/src/providers/leafs_provider.dart';
-
-import 'camera_screen.dart';
+import 'package:aegistree/src/src.dart';
 
 class Diagnose extends ConsumerStatefulWidget {
   const Diagnose({super.key});
@@ -43,6 +38,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
     );
 
     return Scaffold(
+      backgroundColor: white,
       appBar: const CustomImageAppBar(hasBackButton: false),
       body: Padding(
         padding: const EdgeInsets.all(16),

@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import 'package:aegistree/src/components/index.dart';
-
-import 'early_detection.dart';
-import 'environmental_factors.dart';
-import 'prevention_management.dart';
-import 'types_of_diseases.dart';
+import 'package:aegistree/src/src.dart';
 
 class Learn extends ConsumerWidget {
   const Learn({super.key});

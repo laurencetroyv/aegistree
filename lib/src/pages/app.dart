@@ -2,15 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:aegistree/src/components/text/inknut_antiqua.dart';
-import 'package:aegistree/src/constants/index.dart';
-import 'package:aegistree/src/entities/user_entity.dart';
-import 'package:aegistree/src/pages/app/diagnose.dart';
-import 'package:aegistree/src/providers/users_provider.dart';
-
-import 'app/dashboard.dart';
-import 'app/learn.dart';
-import 'app/profile.dart';
+import 'package:aegistree/src/src.dart';
 
 class App extends ConsumerStatefulWidget {
   const App({super.key});
@@ -35,14 +27,20 @@ class _AppState extends ConsumerState<App> {
     });
   }
 
-  void _onMenuIconTapped() {}
+  void _onMenuIconTapped() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Koho(kUnimplementedFeature)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    UserEntity user = ref.watch(usersProviderProvider);
+    final user = ref.watch(usersProvider)!;
 
     final avatarIcon = CircleAvatar(
-      backgroundImage: NetworkImage(user.avatar),
+      backgroundImage: user.avatar != null
+          ? MemoryImage(user.avatar!)
+          : const AssetImage('assets/images/temp_profile.png'),
       radius: kXtraLarge,
     );
 

@@ -7,7 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:aegistree/src/components/index.dart';
+import 'package:aegistree/src/src.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -28,7 +28,6 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
     if (cameras.isEmpty) return;
 
     _controller = CameraController(

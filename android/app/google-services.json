@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "916388646081",
+    "project_id": "tree-leaf-detection",
+    "storage_bucket": "tree-leaf-detection.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916388646081:android:ea081cb336f24bf3d99840",
+        "android_client_info": {
+          "package_name": "com.example.aegistree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916388646081-jgikkfefv1mlr2jort186q237e2kkh2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwsoiuDj-9zgvAeg_4WPiMdnTVoCpxd9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916388646081-jgikkfefv1mlr2jort186q237e2kkh2t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "916388646081-meu5br7qofha7ivriih0er5qolvpo6n5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aegistree"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

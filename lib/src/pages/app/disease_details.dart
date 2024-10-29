@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import 'package:aegistree/src/components/index.dart';
-import 'package:aegistree/src/entities/entities.dart';
-import 'package:aegistree/src/providers/article_provider.dart';
+import 'package:aegistree/src/src.dart';
 
 class DiseaseDetails extends ConsumerWidget {
   const DiseaseDetails(this.disease, {super.key});

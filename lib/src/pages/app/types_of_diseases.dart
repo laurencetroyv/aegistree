@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import 'package:aegistree/src/components/index.dart';
-import 'package:aegistree/src/pages/app/disease_details.dart';
-import 'package:aegistree/src/providers/diseases_provider.dart';
+import 'package:aegistree/src/src.dart';
 
 class TypesOfDiseases extends ConsumerWidget {
   const TypesOfDiseases({super.key});

@@ -1,0 +1,25 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "tree-leaf-detection",
+                    "appId": "1:916388646081:android:ea081cb336f24bf3d99840",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "tree-leaf-detection",
+                    "configurations": {
+                        "android": "1:916388646081:android:ea081cb336f24bf3d99840",
+                        "ios": "1:916388646081:ios:ef5120c17ae48cbfd99840",
+                        "macos": "1:916388646081:ios:ef5120c17ae48cbfd99840",
+                        "web": "1:916388646081:web:28b688a34b32a2e6d99840",
+                        "windows": "1:916388646081:web:e66fab9f6b1a2620d99840"
+                    }
+                }
+            }
+        }
+    }
+}
