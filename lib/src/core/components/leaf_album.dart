@@ -96,8 +96,8 @@ class LeafAlbumGrid extends ConsumerWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).primaryColor,
                         image: DecorationImage(
+                          fit: BoxFit.cover,
                           image: MemoryImage(leafs[index].image),
                         ),
                       ),

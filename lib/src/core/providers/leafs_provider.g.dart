@@ -6,7 +6,7 @@ part of 'leafs_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$leafsHash() => r'9a86c4c61617b904ff6a413cf6cd0965597ab028';
+String _$leafsHash() => r'd4dad37f7133d7567214ac893777bf62b3e4efdd';
 
 /// See also [Leafs].
 @ProviderFor(Leafs)

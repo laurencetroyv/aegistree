@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 
 import 'package:aegistree/src/src.dart';
 
@@ -12,35 +11,29 @@ class ActionTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final leafs = ref.watch(leafsProvider);
-
     return ListView(
       controller: scrollController,
       padding: const EdgeInsets.all(16),
-      children: [
-        const Incosolata(
+      children: const [
+        Incosolata(
           'Recommended',
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),
-        const OpacityBorder(),
-        const SizedBox(height: 16),
-        const ActionItem(
+        OpacityBorder(),
+        SizedBox(height: 16),
+        ActionItem(
           label: 'Watered:',
           value: 'Water every morning',
         ),
-        const ActionItem(
+        ActionItem(
           label: 'Fertilized:',
           value: 'Spray with a suitable rust control',
         ),
-        const ActionItem(
+        ActionItem(
           label: 'Leaves cleaned:',
           value: 'Remove affected leaves',
         ),
-        const Gap(28),
-        const OpacityBorder(),
-        const Gap(4),
-        LeafGrid(leafs)
       ],
     );
   }

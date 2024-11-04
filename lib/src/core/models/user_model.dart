@@ -1,20 +1,23 @@
-import 'package:flutter/services.dart';
+import 'package:isar/isar.dart';
 
-import 'package:aegistree/src/src.dart';
+part 'user_model.g.dart';
 
-class UserEntity {
-  final String id;
+@collection
+class UserModel {
+  @id
+  final int i = 1;
+  final String uid;
   final String firstName;
   final String middleName;
   final String lastName;
   final String email;
   final String phoneNumber;
-  final Uint8List? avatar;
+  final List<int>? avatar;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  UserEntity({
-    required this.id,
+  UserModel({
+    required this.uid,
     required this.firstName,
     required this.middleName,
     required this.lastName,
@@ -29,16 +32,4 @@ class UserEntity {
       firstName.length > 1 ? firstName.split(" ")[0] : firstName;
 
   String get fullName => "$firstName $middleName $lastName";
-
-  UserModel get userModel => UserModel(
-        uid: id,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
-        avatar: avatar?.toList(),
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
 }

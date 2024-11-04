@@ -15,6 +15,10 @@ class Users extends _$Users {
 
   void addUser(UserEntity user) {
     state = user;
+
+    isar.writeAsync((isar) {
+      isar.userModels.put(user.userModel);
+    });
   }
 
   Future<void> updateAvatar(Uint8List byte) async {

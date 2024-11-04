@@ -406,6 +406,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.10+2"
+  firebase_app_check:
+    dependency: "direct main"
+    description:
+      name: firebase_app_check
+      sha256: b5b3c1df2698d6b6bd183f27fb10fbf61f9a0a564d8ccba3d87d0e0760a9ffea
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1+4"
+  firebase_app_check_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_app_check_platform_interface
+      sha256: "8dbb826d99c67512212331331461ee142e46645740f1c1209706ca2f72958e57"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+38"
+  firebase_app_check_web:
+    dependency: transitive
+    description:
+      name: firebase_app_check_web
+      sha256: d9cf8d7e7eb904399784ecdc21ac66119ff2a93181bd7a3f8ab43e8220ad0be8
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -725,14 +749,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
+  isar:
+    dependency: "direct main"
+    description:
+      name: isar
+      sha256: e987032e5d007a03ba4415cbf4d47add17b57ac664db8705db90fbfeb6a16737
+      url: "https://pub.isar-community.dev"
+    source: hosted
+    version: "4.0.3"
+  isar_flutter_libs:
+    dependency: "direct main"
+    description:
+      name: isar_flutter_libs
+      sha256: a6b86d8618fe2d7d0e2ac6aa7a7f21c0c8ae912ccbef94a45d9f6e1e519ef610
+      url: "https://pub.isar-community.dev"
+    source: hosted
+    version: "4.0.3"
   js:
     dependency: transitive
     description:
       name: js
-      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.6.7"
   json_annotation:
     dependency: transitive
     description:
@@ -854,13 +894,13 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
-      sha256: fec0d61223fba3154d87759e3cc27fe2c8dc498f6386c6d6fc80d1afdd1bf378
+      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   path_provider_android:
     dependency: transitive
     description:

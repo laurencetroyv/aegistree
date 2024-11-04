@@ -5,7 +5,6 @@ export 'custom_image_appbar.dart';
 export 'custom_textfield.dart';
 export 'leaf_album_categories.dart';
 export 'leaf_album.dart';
-export 'leaf_grid.dart';
 export 'leaf_text.dart';
 export 'opacity_border.dart';
 export 'prevention_management_container.dart';

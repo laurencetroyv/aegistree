@@ -165,26 +165,15 @@ class _SignUpState extends ConsumerState<SignUp> {
     setState(() => isLoading = true);
 
     try {
-      final response =
-          await ref.read(authProvider.notifier).signUpWithEmailAndPassword(
-                email: email.text.trim(),
-                password: password.text,
-                firstName: firstName.text.trim(),
-                middleName: middleName.text.trim(),
-                lastName: lastName.text.trim(),
-                phoneNumber: phoneNumber.text.trim(),
-              );
+      await ref.read(authProvider.notifier).signUpWithEmailAndPassword(
+            email: email.text.trim(),
+            password: password.text,
+            firstName: firstName.text.trim(),
+            middleName: middleName.text.trim(),
+            lastName: lastName.text.trim(),
+            phoneNumber: phoneNumber.text.trim(),
+          );
 
-      final user = UserEntity(
-        id: response.user!.uid,
-        firstName: firstName.text,
-        middleName: middleName.text,
-        lastName: lastName.text,
-        email: email.text,
-        phoneNumber: phoneNumber.text,
-      );
-
-      ref.read(usersProvider.notifier).addUser(user);
       Navigator.pop(context);
     } catch (e) {
       if (mounted) {

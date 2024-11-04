@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import 'package:aegistree/src/core/components/tab/history.dart';
 import 'package:aegistree/src/src.dart';
 
-class LeafDetails extends StatelessWidget {
+class LeafDetails extends ConsumerWidget {
   const LeafDetails(
     this.leaf, {
     super.key,
@@ -16,7 +18,7 @@ class LeafDetails extends StatelessWidget {
   final String collectionName;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Stack(
         children: [
@@ -49,11 +51,13 @@ class LeafDetails extends StatelessWidget {
             ),
           ),
           DraggableScrollableSheet(
-            minChildSize: 0.6,
+            minChildSize: 0.7,
             maxChildSize: 0.9,
-            initialChildSize: 0.6,
+            initialChildSize: 0.7,
             builder: (context, scrollController) {
               final createdAt = DateFormat('MM/dd/yy').format(leaf.createdAt);
+              final disease =
+                  ref.read(diseaseProvider.notifier).findById(leaf.type);
 
               return Container(
                 decoration: const BoxDecoration(
@@ -88,7 +92,7 @@ class LeafDetails extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             InknutAntiqua(
-                              leaf.uid,
+                              disease.name,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
@@ -117,9 +121,10 @@ class LeafDetails extends StatelessWidget {
                                   children: [
                                     ActionTab(scrollController),
                                     RequirementTab(scrollController),
-                                    const Center(
-                                      child: Text('History Content'),
-                                    ),
+                                    HistoryTab(
+                                      leaf.type,
+                                      scrollController: scrollController,
+                                    )
                                   ],
                                 ),
                               ),

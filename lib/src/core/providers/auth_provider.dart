@@ -8,17 +8,90 @@ import 'package:aegistree/src/src.dart';
 
 part 'auth_provider.g.dart';
 
+// Create an AuthState class to handle different authentication states
+sealed class AuthState {
+  const AuthState();
+}
+
+class AuthInitial extends AuthState {
+  const AuthInitial();
+}
+
+class Authenticated extends AuthState {
+  final UserEntity user;
+  const Authenticated(this.user);
+}
+
+class Unauthenticated extends AuthState {
+  const Unauthenticated();
+}
+
+class AuthError extends AuthState {
+  final String message;
+  const AuthError(this.message);
+}
+
 @riverpod
 class Auth extends _$Auth {
-  final FirebaseAuth firebaseAuth = auth;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  final _firebaseAuth = auth;
+  final _googleSignIn = GoogleSignIn();
 
   @override
-  void build() {
-    return;
+  AuthState build() {
+    // Listen to auth state changes and update the state accordingly
+    _firebaseAuth.authStateChanges().listen((user) async {
+      if (user != null) {
+        try {
+          final userDetails = await getUserDetails(user.uid);
+          ref.read(usersProvider.notifier).addUser(userDetails);
+          state = Authenticated(userDetails);
+        } catch (e) {
+          state = AuthError(e.toString());
+        }
+      } else {
+        state = const Unauthenticated();
+      }
+    });
+
+    return const AuthInitial();
   }
 
-  Future<UserCredential> signUpWithEmailAndPassword({
+  Future<UserEntity> getUserDetails(String uid) async {
+    try {
+      final dbResponse = await db.collection("users").doc(uid).get();
+
+      if (!dbResponse.exists) {
+        throw 'User details not found';
+      }
+
+      final dbData = dbResponse.data()!;
+      final hasAvatar = dbData["avatar"] as bool;
+      Uint8List? avatar;
+
+      if (hasAvatar) {
+        final storageRef = storage.child("avatar/$uid.png");
+        avatar = await storageRef.getData();
+      }
+
+      return UserEntity(
+        id: uid,
+        firstName: dbData["firstName"] ?? '',
+        middleName: dbData["middleName"] ?? '',
+        lastName: dbData["lastName"] ?? '',
+        email: dbData["email"] ?? '',
+        phoneNumber: dbData["phoneNumber"] ?? '',
+        avatar: avatar,
+        createdAt: DateTime.parse(dbData["createdAt"]),
+        updatedAt: dbData["updatedAt"].isEmpty
+            ? DateTime.now()
+            : DateTime.parse(dbData["updatedAt"]),
+      );
+    } catch (e) {
+      throw 'Failed to get user details: $e';
+    }
+  }
+
+  Future<void> signUpWithEmailAndPassword({
     required String email,
     required String password,
     required String firstName,
@@ -27,15 +100,17 @@ class Auth extends _$Auth {
     required String phoneNumber,
   }) async {
     try {
-      // Create the user with email and password
-      final credential = await firebaseAuth.createUserWithEmailAndPassword(
+      state = const AuthInitial(); // Show loading state
+
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Update the user's display name
-      await credential.user
-          ?.updateDisplayName("$firstName $middleName $lastName");
+      if (credential.user == null) throw 'Failed to create user';
+
+      await credential.user!
+          .updateDisplayName("$firstName $middleName $lastName");
 
       await db.collection("users").doc(credential.user!.uid).set({
         "email": email,
@@ -48,90 +123,82 @@ class Auth extends _$Auth {
         "updatedAt": ""
       });
 
-      return credential;
+      final userDetails = await getUserDetails(credential.user!.uid);
+      state = Authenticated(userDetails);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        throw 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        throw 'An account already exists for this email.';
-      }
-      throw e.message ?? 'An error occurred during sign up.';
+      state = AuthError(
+        e.code == 'weak-password'
+            ? 'The password provided is too weak.'
+            : e.code == 'email-already-in-use'
+                ? 'An account already exists for this email.'
+                : e.message ?? 'An error occurred during sign up.',
+      );
     } catch (e) {
-      throw 'An unexpected error occurred.';
+      state = AuthError('An unexpected error occurred: $e');
     }
   }
 
-  Future<UserEntity> signInWithEmailAndPassword({
+  Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     try {
-      final authResponse = await firebaseAuth.signInWithEmailAndPassword(
+      state = const AuthInitial(); // Show loading state
+
+      final authResponse = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      final id = authResponse.user!.uid;
-      final dbResponse = await db.collection("users").doc(id).get();
-      final dbData = dbResponse.data()!;
-      final hasAvatar = dbData["avatar"] as bool;
-      late Uint8List? avatar;
+      if (authResponse.user == null) throw 'Failed to sign in';
 
-      if (hasAvatar) {
-        final storageRef = storage.child("avatar/$id.png");
-        avatar = await storageRef.getData();
-      }
-
-      final user = UserEntity(
-        id: id,
-        firstName: dbData["firstName"],
-        middleName: dbData["middleName"],
-        lastName: dbData["lastName"],
-        email: dbData["email"],
-        phoneNumber: dbData["phoneNumber"],
-        avatar: hasAvatar ? avatar : null,
-        createdAt: DateTime.parse(dbData["createdAt"]),
-        updatedAt: DateTime.parse(dbData["updatedAt"]),
-      );
-
-      return user;
+      final userDetails = await getUserDetails(authResponse.user!.uid);
+      state = Authenticated(userDetails);
     } on FirebaseAuthException catch (e) {
-      throw e.message ?? 'An error occurred during sign in. $e';
+      state = AuthError(e.message ?? 'An error occurred during sign in.');
     } catch (e) {
-      throw 'An unexpected error occurred. $e';
+      state = AuthError('An unexpected error occurred: $e');
     }
   }
 
-  // Google Sign In
-  Future<UserCredential> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      state = const AuthInitial(); // Show loading state
 
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        throw 'Google sign in was cancelled.';
+        state = const AuthError('Google sign in was cancelled.');
+        return;
       }
 
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Sign in to Firebase with the Google credentials
-      return await firebaseAuth.signInWithCredential(credential);
+      final response = await _firebaseAuth.signInWithCredential(credential);
+      if (response.user == null) throw 'Failed to sign in with Google';
+
+      final userDetails = await getUserDetails(response.user!.uid);
+      state = Authenticated(userDetails);
     } catch (e) {
-      throw 'Failed to sign in with Google: ${e.toString()}';
+      state = AuthError('Failed to sign in with Google: $e');
     }
   }
 
-  // Sign Out
   Future<void> signOut() async {
-    await googleSignIn.signOut();
-    await firebaseAuth.signOut();
+    try {
+      state = const AuthInitial(); // Show loading state
+      await Future.wait([
+        _googleSignIn.signOut(),
+        _firebaseAuth.signOut(),
+      ]);
+      state = const Unauthenticated();
+    } catch (e) {
+      state = AuthError('Failed to sign out: $e');
+    }
   }
 }

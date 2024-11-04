@@ -113,10 +113,12 @@ class _SignUpState extends ConsumerState<SignIn> {
                       const Gap(32),
                       FilledButton(
                         onPressed: _handleEmailSignI,
-                        child: const InknutAntiqua("Sign In"),
+                        child: isLoading
+                            ? const CircularProgressIndicator()
+                            : const InknutAntiqua("Sign In"),
                       ),
                       OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: _handleGoogleSignIn,
                         label: const InknutAntiqua("Login via Google"),
                         icon: const Icon(Ionicons.logo_google),
                       ),
@@ -159,13 +161,31 @@ class _SignUpState extends ConsumerState<SignIn> {
     setState(() => isLoading = true);
 
     try {
-      final response =
-          await ref.read(authProvider.notifier).signInWithEmailAndPassword(
-                email: email.text.trim(),
-                password: password.text,
-              );
+      await ref.read(authProvider.notifier).signInWithEmailAndPassword(
+            email: email.text.trim(),
+            password: password.text,
+          );
 
-      ref.read(usersProvider.notifier).addUser(response);
+      Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => isLoading = true);
+
+    try {
+      await ref.read(authProvider.notifier).signInWithGoogle();
+
       Navigator.pop(context);
     } catch (e) {
       if (mounted) {

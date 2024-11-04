@@ -18,8 +18,7 @@ class LeafAlbum extends ConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: CircleAvatar(
-          backgroundImage:
-              NetworkImage("https://robohash.org/${user.id}?set=set4"),
+          backgroundImage: MemoryImage(user.avatar!),
           radius: 24,
         ),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.menu))],

@@ -19,20 +19,31 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(usersProvider);
+    final authState = ref.watch(authProvider);
 
     return MaterialApp(
       title: kAppTitle,
       debugShowCheckedModeBanner: false,
       theme: Themes().lightTheme,
-      home: _route(user),
+      home: switch (authState) {
+        AuthInitial() => const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        Authenticated(user: final user) => _route(user),
+        Unauthenticated() => const WelcomeScreen(),
+        AuthError(message: final message) => Scaffold(
+            body: Center(
+              child: Text(message),
+            ),
+          ),
+      },
     );
   }
 
-  Widget _route(UserEntity? user) {
-    if (user == null) {
-      return const WelcomeScreen();
-    } else if (user.avatar == null) {
+  Widget _route(UserEntity user) {
+    if (user.avatar == null) {
       return const UserWelcomeScreen();
     } else {
       return const App();
