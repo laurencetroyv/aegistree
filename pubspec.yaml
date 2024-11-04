@@ -64,6 +64,7 @@ dependencies:
     version: ^4.0.3
   path_provider: ^2.1.5
   firebase_app_check: ^0.3.1+4
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

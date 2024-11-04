@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:http/http.dart' as http;
 
+import 'package:aegistree/src/pages/app/detailed_diseases.dart';
 import 'package:aegistree/src/src.dart';
 
 class Learn extends ConsumerWidget {
@@ -10,33 +12,10 @@ class Learn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final content = [
-      {
-        "name": "Leaf Diseases",
-        "icon": "diseases",
-        "to": const TypesOfDiseases()
-      },
-      {
-        "name": "Prevention & Management",
-        "icon": "prevention",
-        "to": const PreventionManagement(),
-      },
-      {
-        "name": "Importance of Early Detection",
-        "icon": "important",
-        "to": const EarlyDetection()
-      },
-      {
-        "name": "Environmental Factors",
-        "icon": "environment",
-        "to": const EnvironmentalFactors()
-      }
-    ];
-
-    final defaultShadow = Shadow(
-      color: Colors.black.withOpacity(.35),
-      offset: const Offset(0, 4),
+    final defaultShadow = BoxShadow(
+      color: Colors.black.withOpacity(.25),
       blurRadius: 4,
+      offset: const Offset(0, 4),
     );
 
     return SafeArea(
@@ -45,61 +24,129 @@ class Learn extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/images/learning-resources.png',
-                      width: 132,
-                      height: 145,
-                      fit: BoxFit.cover,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0, 4),
+                      blurRadius: 4,
+                      color: black60,
+                    )
+                  ],
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
                   ),
-                  const Gap(8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      gradient: gradient,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Row(
                       children: [
-                        const Koho("Why Trees?", fontWeight: FontWeight.bold),
-                        const Gap(8),
-                        const Karla(
-                          "Trees help clean the air we breath, filter the water we drink, and provide habitat to over 80% of the world's terrestrial biodiversity. Forests provide jobs to over 1.6 billion people, absorb harmful carbon from the atmosphere, and are key ingredients in 25% of all medicines.",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
+                        Expanded(
+                          child: Koho(
+                            "Discover how to identify and treat these diseases to keep your trees thriving!",
+                            fontWeight: FontWeight.w600,
+                            color: black60,
+                          ),
                         ),
-                        const Gap(8),
-                        Koho(
-                          "Read More",
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF37A411),
-                          shadow: [defaultShadow],
+                        Transform.flip(
+                          flipX: true,
+                          child: SizedBox(
+                            width: 100,
+                            child: Image.asset(
+                              'assets/images/plant-hand.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-              const Gap(72),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 28,
-                  mainAxisSpacing: 28,
+                  ),
                 ),
-                itemCount: content.length,
-                itemBuilder: (context, index) {
-                  final item = content[index];
-
-                  return ResourceContainer(
-                    item['name'] as String,
-                    to: item['to'] as Widget,
-                    icon: item['icon'] as String,
-                  );
+              ),
+              const Gap(32),
+              InknutAntiqua(
+                "Types of Leaf Diseases",
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                shadow: [defaultShadow],
+              ),
+              const Gap(16),
+              FutureBuilder(
+                future: fetchDiseases(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    final diseases = snapshot.data as List<DiseaseEntity>;
+                    return Expanded(
+                      child: GridView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemCount: diseases.length,
+                        itemBuilder: (context, index) {
+                          final disease = diseases[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return DetailedDiseases(disease);
+                                }),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFFFE9),
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [defaultShadow],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                  vertical: 22,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                        child: Image.memory(disease.image)),
+                                    const Gap(12),
+                                    Koho(
+                                      disease.name,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF247408),
+                                      textAlign: TextAlign.center,
+                                      shadow: [defaultShadow],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
                 },
               ),
             ],
@@ -107,5 +154,43 @@ class Learn extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<List<DiseaseEntity>> fetchDiseases() async {
+    final diseaseTypes = [
+      "Anthracnose",
+      "Black spot",
+      "Blight",
+      "Canker",
+      "Downy mildew",
+      "Powdery mildew",
+      "Rust",
+      "Shot hole",
+      "Leaf spot",
+      "Sooty mold",
+    ];
+
+    // Use Future.wait to handle multiple async operations
+    final diseases = await Future.wait(
+      diseaseTypes.map((type) async {
+        final id = uuid.v4();
+        final response =
+            await http.get(Uri.parse("https://robohash.org/$id.png/?set=set4"));
+
+        if (response.statusCode != 200) {
+          throw Exception('Failed to load image for $type');
+        }
+
+        return DiseaseEntity(
+            id: id,
+            name: type,
+            description: "This is a description of $type",
+            image: response.bodyBytes, // Use bodyBytes to get Uint8List
+            createdAt: DateTime.now(),
+            createdBy: "secret");
+      }),
+    );
+
+    return diseases;
   }
 }
