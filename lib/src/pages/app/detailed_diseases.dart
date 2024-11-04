@@ -7,13 +7,13 @@ import 'package:aegistree/src/src.dart';
 
 class DetailedDiseases extends ConsumerWidget {
   const DetailedDiseases(this.disease, {super.key});
-  final DiseaseEntity disease;
+  final LearnEntity disease;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(disease.name),
+        title: Text(disease.disease.name),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -39,25 +39,13 @@ class DetailedDiseases extends ConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: Image.memory(disease.image),
+                child: Image.memory(disease.disease.image),
               ),
             ),
             const Gap(32),
-            const Details(
-              title: "Description",
-              description:
-                  "Discover how to identify and treat these diseases to keep your trees thriving!",
-            ),
-            const Details(
-              title: "Symptoms",
-              description:
-                  "Discover how to identify and treat these diseases to keep your trees thriving!",
-            ),
-            const Details(
-              title: "Treatment",
-              description:
-                  "Discover how to identify and treat these diseases to keep your trees thriving!",
-            ),
+            Details(title: "Description", description: disease.description),
+            Details(title: "Symptoms", description: disease.symptoms),
+            Details(title: "Treatment", description: disease.treatment),
           ],
         ),
       ),

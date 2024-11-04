@@ -90,7 +90,7 @@ class Learn extends ConsumerWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
-                    final diseases = snapshot.data as List<DiseaseEntity>;
+                    final diseases = snapshot.data as List<LearnEntity>;
                     return Expanded(
                       child: GridView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -129,10 +129,11 @@ class Learn extends ConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                        child: Image.memory(disease.image)),
+                                        child: Image.memory(
+                                            disease.disease.image)),
                                     const Gap(12),
                                     Koho(
-                                      disease.name,
+                                      disease.disease.name,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xFF247408),
                                       textAlign: TextAlign.center,
@@ -156,7 +157,7 @@ class Learn extends ConsumerWidget {
     );
   }
 
-  Future<List<DiseaseEntity>> fetchDiseases() async {
+  Future<List<LearnEntity>> fetchDiseases() async {
     final diseaseTypes = [
       "Anthracnose",
       "Black spot",
@@ -182,15 +183,28 @@ class Learn extends ConsumerWidget {
         }
 
         return DiseaseEntity(
-            id: id,
-            name: type,
-            description: "This is a description of $type",
-            image: response.bodyBytes, // Use bodyBytes to get Uint8List
-            createdAt: DateTime.now(),
-            createdBy: "secret");
+          id: id,
+          name: type,
+          description: "This is a description of $type",
+          image: response.bodyBytes, // Use bodyBytes to get Uint8List
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        );
       }),
     );
 
-    return diseases;
+    final learn = diseases.map((disease) {
+      return LearnEntity(
+        disease: disease,
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      );
+    }).toList();
+
+    return learn;
   }
 }
