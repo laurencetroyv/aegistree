@@ -193,17 +193,98 @@ class Learn extends ConsumerWidget {
       }),
     );
 
-    final learn = diseases.map((disease) {
-      return LearnEntity(
-        disease: disease,
+    final learn = [
+      LearnEntity(
+        disease: diseases[0],
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         treatment:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
-      );
-    }).toList();
+      ),
+      LearnEntity(
+        disease: diseases[1],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[2],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[3],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[4],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[5],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[6],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[7],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[8],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+      LearnEntity(
+        disease: diseases[9],
+        description:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        symptoms:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+        treatment:
+            "Discover how to identify and treat these diseases to keep your trees thriving!",
+      ),
+    ];
 
     return learn;
   }
