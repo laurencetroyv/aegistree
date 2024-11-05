@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:aegistree/src/pages/app/detailed_diseases.dart';
 import 'package:aegistree/src/src.dart';
@@ -171,31 +172,27 @@ class Learn extends ConsumerWidget {
       "Sooty mold",
     ];
 
-    // Use Future.wait to handle multiple async operations
-    final diseases = await Future.wait(
-      diseaseTypes.map((type) async {
-        final id = uuid.v4();
-        final response =
-            await http.get(Uri.parse("https://robohash.org/$id.png/?set=set4"));
-
-        if (response.statusCode != 200) {
-          throw Exception('Failed to load image for $type');
-        }
-
-        return DiseaseEntity(
-          id: id,
-          name: type,
-          description: "This is a description of $type",
-          image: response.bodyBytes, // Use bodyBytes to get Uint8List
-          createdAt: DateTime.now(),
-          createdBy: "secret",
-        );
-      }),
-    );
+    final anthracnose = await File('assets/images/diseases/').readAsBytes();
+    final blackSpot = await File('assets/images/diseases/').readAsBytes();
+    final blight = await File('assets/images/diseases/').readAsBytes();
+    final canker = await File('assets/images/diseases/').readAsBytes();
+    final downyMildew = await File('assets/images/diseases/').readAsBytes();
+    final powderyMildew = await File('assets/images/diseases/').readAsBytes();
+    final rust = await File('assets/images/diseases/').readAsBytes();
+    final shotHole = await File('assets/images/diseases/').readAsBytes();
+    final leafSpot = await File('assets/images/diseases/').readAsBytes();
+    final sootyMold = await File('assets/images/diseases/').readAsBytes();
 
     final learn = [
       LearnEntity(
-        disease: diseases[0],
+        disease: DiseaseEntity(
+          id: "0",
+          name: diseaseTypes[0],
+          description: "This is a description of ${diseaseTypes[0]}",
+          image: anthracnose,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -204,7 +201,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[1],
+        disease: DiseaseEntity(
+          id: "1",
+          name: diseaseTypes[1],
+          description: "This is a description of ${diseaseTypes[1]}",
+          image: blackSpot,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -213,7 +217,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[2],
+        disease: DiseaseEntity(
+          id: "2",
+          name: diseaseTypes[2],
+          description: "This is a description of ${diseaseTypes[2]}",
+          image: blight,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -222,7 +233,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[3],
+        disease: DiseaseEntity(
+          id: "3",
+          name: diseaseTypes[3],
+          description: "This is a description of ${diseaseTypes[3]}",
+          image: canker,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -231,7 +249,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[4],
+        disease: DiseaseEntity(
+          id: "4",
+          name: diseaseTypes[4],
+          description: "This is a description of ${diseaseTypes[4]}",
+          image: downyMildew,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -240,7 +265,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[5],
+        disease: DiseaseEntity(
+          id: "5",
+          name: diseaseTypes[5],
+          description: "This is a description of ${diseaseTypes[5]}",
+          image: powderyMildew,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -249,7 +281,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[6],
+        disease: DiseaseEntity(
+          id: "6",
+          name: diseaseTypes[6],
+          description: "This is a description of ${diseaseTypes[6]}",
+          image: rust,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -258,7 +297,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[7],
+        disease: DiseaseEntity(
+          id: "7",
+          name: diseaseTypes[7],
+          description: "This is a description of ${diseaseTypes[7]}",
+          image: shotHole,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -267,7 +313,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[8],
+        disease: DiseaseEntity(
+          id: "8",
+          name: diseaseTypes[8],
+          description: "This is a description of ${diseaseTypes[8]}",
+          image: leafSpot,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
@@ -276,7 +329,14 @@ class Learn extends ConsumerWidget {
             "Discover how to identify and treat these diseases to keep your trees thriving!",
       ),
       LearnEntity(
-        disease: diseases[9],
+        disease: DiseaseEntity(
+          id: "9",
+          name: diseaseTypes[9],
+          description: "This is a description of ${diseaseTypes[9]}",
+          image: sootyMold,
+          createdAt: DateTime.now(),
+          createdBy: "secret",
+        ),
         description:
             "Discover how to identify and treat these diseases to keep your trees thriving!",
         symptoms:
