@@ -112,7 +112,7 @@ class UserWelcomeScreen extends ConsumerWidget {
                             "lastName": user.lastName,
                             "phoneNumber": user.phoneNumber,
                             "avatar": true,
-                            "createdAt": user.createdAt,
+                            "createdAt": user.createdAt!.toIso8601String(),
                             "updatedAt": DateTime.now().toIso8601String(),
                           });
 

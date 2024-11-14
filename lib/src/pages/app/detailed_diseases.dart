@@ -18,8 +18,8 @@ class DetailedDiseases extends ConsumerWidget {
       body: Container(
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(gradient: gradient),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: double.infinity),
             Container(

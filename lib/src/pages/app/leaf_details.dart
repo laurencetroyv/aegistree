@@ -119,8 +119,10 @@ class LeafDetails extends ConsumerWidget {
                               Expanded(
                                 child: TabBarView(
                                   children: [
-                                    ActionTab(scrollController),
-                                    RequirementTab(scrollController),
+                                    ActionTab(scrollController,
+                                        leaf: collectionName.split(" - ")[0]),
+                                    RequirementTab(scrollController,
+                                        leaf: collectionName.split(" - ")[0]),
                                     HistoryTab(
                                       leaf.type,
                                       scrollController: scrollController,

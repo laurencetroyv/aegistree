@@ -35,14 +35,14 @@ class ChartLegend extends ConsumerWidget {
         Koho(
           // add ... if title exceeds to 17 characters
           parts.length > 2 ? "${parts[0]} ${parts[1]}..." : title,
-          fontSize: 16,
+          fontSize: 12,
           fontWeight: FontWeight.w500,
           color: Colors.black45,
         ),
         Text(
           count,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             color: Colors.red,
           ),
         ),

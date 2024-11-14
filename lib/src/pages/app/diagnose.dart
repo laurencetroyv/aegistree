@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
+import 'package:aegistree/src/core/providers/solution_provider.dart';
 import 'package:aegistree/src/src.dart';
 
 class Diagnose extends ConsumerStatefulWidget {
@@ -51,7 +52,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
               textAlign: TextAlign.center,
               fontWeight: FontWeight.bold,
             ),
-            if (isAsset) const Gap(96) else const Gap(32),
+            if (isAsset) const Gap(64) else const Gap(32),
             if (!isAsset)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -111,7 +112,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
               )
             else
               Expanded(child: Image.memory(bytes)),
-            if (isAsset) const Gap(96) else const Gap(16),
+            if (isAsset) const Gap(64) else const Gap(16),
             if (!isAsset)
               SizedBox(
                 width: 300,
@@ -129,7 +130,8 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     final first = response.entries.first;
 
                     setState(() {
-                      diseaseName = first.key.replaceAll("_", " ");
+                      diseaseName =
+                          "${first.key.replaceAll("_", " ")} - ${first.value.roundToDouble()}";
                       detectionDone = true;
                     });
 
@@ -189,6 +191,9 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
+                        final solutions = ref
+                            .read(solutionProvider.notifier)
+                            .getSolution(diseaseName);
                         return Dialog(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
@@ -202,15 +207,22 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                                   textAlign: TextAlign.center,
                                 ),
                                 const Gap(6),
-                                const SolutionBullet(
-                                    "Rake up and destroy fallen leaves before the first snowfall to eliminate locations where diseases can survive to re-infect the plant the following growing season."),
-                                const Gap(6),
-                                const SolutionBullet(
-                                    "Do not overcrowd plants — use size at maturity as a spacing guide when planting."),
-                                const SolutionBullet(
-                                    "Prune trees or shrubs to increase light penetration and improve air circulation throughout the canopy."),
-                                const SolutionBullet(
-                                    "Wet conditions promote disease, so water trees at the base and be careful not to splash water on leaves. A drip or soaker hose works best for this. Avoid sprinklers."),
+                                if (solutions == null)
+                                  const Column(
+                                    children: [
+                                      SolutionBullet(
+                                          "Rake up and destroy fallen leaves before the first snowfall to eliminate locations where diseases can survive to re-infect the plant the following growing season."),
+                                      Gap(6),
+                                      SolutionBullet(
+                                          "Do not overcrowd plants — use size at maturity as a spacing guide when planting."),
+                                      SolutionBullet(
+                                          "Prune trees or shrubs to increase light penetration and improve air circulation throughout the canopy."),
+                                      SolutionBullet(
+                                          "Wet conditions promote disease, so water trees at the base and be careful not to splash water on leaves. A drip or soaker hose works best for this. Avoid sprinklers."),
+                                    ],
+                                  )
+                                else
+                                  SolutionBullet(solutions.solution),
                               ],
                             ),
                           ),
@@ -250,6 +262,10 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
+                        final solutions = ref
+                            .read(solutionProvider.notifier)
+                            .getSolution(diseaseName);
+
                         return Dialog(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
@@ -263,15 +279,22 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                                   textAlign: TextAlign.center,
                                 ),
                                 const Gap(6),
-                                const SolutionBullet(
-                                    "Leaf spot diseases weaken trees and shrubs by interrupting photosynthesis."),
-                                const Gap(6),
-                                const SolutionBullet(
-                                    "Most leaf spot diseases affect only a small percentage of the tree's overall leaf area, and are a minor stress on the health of the tree."),
-                                const SolutionBullet(
-                                    "Leaf spot diseases should be taken seriously if they result in moderate to complete leaf loss two to four years in a row."),
-                                const SolutionBullet(
-                                    "Leaf loss during several consecutive growing seasons can result in reduced growth and increased susceptibility to pests and other diseases."),
+                                if (solutions == null)
+                                  const Column(
+                                    children: [
+                                      SolutionBullet(
+                                          "Leaf spot diseases weaken trees and shrubs by interrupting photosynthesis."),
+                                      Gap(6),
+                                      SolutionBullet(
+                                          "Most leaf spot diseases affect only a small percentage of the tree's overall leaf area, and are a minor stress on the health of the tree."),
+                                      SolutionBullet(
+                                          "Leaf spot diseases should be taken seriously if they result in moderate to complete leaf loss two to four years in a row."),
+                                      SolutionBullet(
+                                          "Leaf loss during several consecutive growing seasons can result in reduced growth and increased susceptibility to pests and other diseases."),
+                                    ],
+                                  )
+                                else
+                                  SolutionBullet(solutions.learnMore)
                               ],
                             ),
                           ),
