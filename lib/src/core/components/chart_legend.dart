@@ -29,24 +29,27 @@ class ChartLegend extends ConsumerWidget {
 
     final parts = title.split(" ");
 
-    final details = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Koho(
-          // add ... if title exceeds to 17 characters
-          parts.length > 2 ? "${parts[0]} ${parts[1]}..." : title,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: Colors.black45,
-        ),
-        Text(
-          count,
-          style: const TextStyle(
+    final details = Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Koho(
+            // add ... if title exceeds to 17 characters
+            parts.length > 2 ? "${parts[0]} ${parts[1]}..." : title,
             fontSize: 12,
-            color: Colors.red,
+            fontWeight: FontWeight.w500,
+            color: Colors.black45,
           ),
-        ),
-      ],
+          Text(
+            count,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
     );
 
     return color != null

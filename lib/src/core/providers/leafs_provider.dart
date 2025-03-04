@@ -69,6 +69,7 @@ class Leafs extends _$Leafs {
           LeafModel leaf = LeafEntity(
             id: doc.id,
             type: data['type'],
+            accuracy: data['accuracy'],
             image: image!,
             createdAt: data['createdAt'],
             createdBy: data['createdBy'],
@@ -92,11 +93,12 @@ class Leafs extends _$Leafs {
     }
   }
 
-  void addLeaf(String diseaseID, Uint8List image) {
+  void addLeaf(String diseaseID, Uint8List image, double accuracy) {
     final leaf = LeafEntity(
       id: uuid.v4(),
       type: diseaseID,
       image: image,
+      accuracy: accuracy,
       createdBy: _user.id,
       createdAt: DateTime.now(),
     );

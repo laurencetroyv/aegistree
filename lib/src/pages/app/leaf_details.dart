@@ -92,7 +92,7 @@ class LeafDetails extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             InknutAntiqua(
-                              disease.name,
+                              '${disease.name} - ${leaf.accuracy.roundToDouble()}%',
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
@@ -120,9 +120,9 @@ class LeafDetails extends ConsumerWidget {
                                 child: TabBarView(
                                   children: [
                                     ActionTab(scrollController,
-                                        leaf: collectionName.split(" - ")[0]),
+                                        leaf: disease.diseaseId),
                                     RequirementTab(scrollController,
-                                        leaf: collectionName.split(" - ")[0]),
+                                        leaf: disease.diseaseId),
                                     HistoryTab(
                                       leaf.type,
                                       scrollController: scrollController,

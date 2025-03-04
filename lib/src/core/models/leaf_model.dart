@@ -8,6 +8,7 @@ class LeafModel {
   final String uid;
   final String type;
   final List<int> image;
+  final double accuracy;
   final String createdBy;
   final DateTime createdAt;
 
@@ -15,6 +16,7 @@ class LeafModel {
     required this.uid,
     required this.type,
     required this.image,
+    required this.accuracy,
     required this.createdBy,
     required this.createdAt,
   });
@@ -24,6 +26,7 @@ class LeafModel {
       uid: uid,
       type: type,
       image: image,
+      accuracy: accuracy,
       createdBy: createdBy,
       createdAt: createdAt,
     );
@@ -41,6 +44,7 @@ class EmbeddedLeafModel {
   final String uid;
   final String type;
   final List<int> image;
+  final double accuracy;
   final String createdBy;
   final DateTime createdAt;
 
@@ -48,6 +52,7 @@ class EmbeddedLeafModel {
     required this.uid,
     required this.type,
     required this.image,
+    required this.accuracy,
     required this.createdBy,
     required this.createdAt,
   });
@@ -58,6 +63,7 @@ class EmbeddedLeafModel {
       uid: uid,
       type: type,
       image: image,
+      accuracy: accuracy,
       createdBy: createdBy,
       createdAt: createdAt,
     );

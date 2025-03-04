@@ -69,6 +69,7 @@ class Disease extends _$Disease {
 
           DiseaseModel disease = DiseaseEntity(
             id: doc.id,
+            diseaseId: data['diseaseId'],
             name: data['name'],
             description: data['description'],
             image: image!,
@@ -97,11 +98,14 @@ class Disease extends _$Disease {
     }
   }
 
-  DiseaseEntity addDisease(String name, String description, Uint8List bytes) {
+  Future<DiseaseEntity> addDisease(String diseaseId, String name,
+      String description, Uint8List bytes) async {
     final index = checkDisease(name);
     if (index == -1) {
+      final id = uuid.v4();
       final disease = DiseaseEntity(
-        id: uuid.v4(),
+        id: id,
+        diseaseId: diseaseId,
         name: name,
         description: description,
         image: bytes,
@@ -117,6 +121,9 @@ class Disease extends _$Disease {
 
       try {
         db.collection('diseases').doc(disease.id).set(disease.toJson);
+
+        final image = storage.child('leafs/$id');
+        await image.putData(disease.image);
       } catch (error) {
         //
       }

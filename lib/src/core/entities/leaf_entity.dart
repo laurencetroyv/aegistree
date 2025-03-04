@@ -6,6 +6,7 @@ class LeafEntity {
   final String id;
   final String type;
   final Uint8List image;
+  final double accuracy;
   final String createdBy;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class LeafEntity {
     required this.id,
     required this.type,
     required this.image,
+    required this.accuracy,
     required this.createdBy,
     required this.createdAt,
   });
@@ -23,6 +25,7 @@ class LeafEntity {
         uid: uid,
         type: type,
         image: image.toList(),
+        accuracy: accuracy,
         createdBy: createdBy,
         createdAt: createdAt,
       );
@@ -31,6 +34,7 @@ class LeafEntity {
     return LeafEntity(
       id: entity.uid,
       type: entity.type,
+      accuracy: entity.accuracy,
       createdBy: entity.createdBy,
       image: Uint8List.fromList(entity.image),
       createdAt: entity.createdAt,
@@ -39,6 +43,7 @@ class LeafEntity {
 
   Map<String, dynamic> get toJson => {
         "type": type,
+        "accuracy": accuracy,
         "createdBy": createdBy,
         "createdAt": createdAt.toIso8601String(),
       };

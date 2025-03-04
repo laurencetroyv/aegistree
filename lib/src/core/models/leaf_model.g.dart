@@ -33,6 +33,10 @@ const LeafModelSchema = IsarGeneratedSchema(
         type: IsarType.longList,
       ),
       IsarPropertySchema(
+        name: 'accuracy',
+        type: IsarType.double,
+      ),
+      IsarPropertySchema(
         name: 'createdBy',
         type: IsarType.string,
       ),
@@ -67,10 +71,11 @@ int serializeLeafModel(IsarWriter writer, LeafModel object) {
     }
     IsarCore.endList(writer, listWriter);
   }
-  IsarCore.writeString(writer, 4, object.createdBy);
+  IsarCore.writeDouble(writer, 4, object.accuracy);
+  IsarCore.writeString(writer, 5, object.createdBy);
   IsarCore.writeLong(
-      writer, 5, object.createdAt.toUtc().microsecondsSinceEpoch);
-  IsarCore.writeString(writer, 6, isarJsonEncode(object.toJson));
+      writer, 6, object.createdAt.toUtc().microsecondsSinceEpoch);
+  IsarCore.writeString(writer, 7, isarJsonEncode(object.toJson));
   return object.id;
 }
 
@@ -98,11 +103,13 @@ LeafModel deserializeLeafModel(IsarReader reader) {
       }
     }
   }
+  final double _accuracy;
+  _accuracy = IsarCore.readDouble(reader, 4);
   final String _createdBy;
-  _createdBy = IsarCore.readString(reader, 4) ?? '';
+  _createdBy = IsarCore.readString(reader, 5) ?? '';
   final DateTime _createdAt;
   {
-    final value = IsarCore.readLong(reader, 5);
+    final value = IsarCore.readLong(reader, 6);
     if (value == -9223372036854775808) {
       _createdAt =
           DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
@@ -115,6 +122,7 @@ LeafModel deserializeLeafModel(IsarReader reader) {
     uid: _uid,
     type: _type,
     image: _image,
+    accuracy: _accuracy,
     createdBy: _createdBy,
     createdAt: _createdAt,
   );
@@ -150,10 +158,12 @@ dynamic deserializeLeafModelProp(IsarReader reader, int property) {
         }
       }
     case 4:
-      return IsarCore.readString(reader, 4) ?? '';
+      return IsarCore.readDouble(reader, 4);
     case 5:
+      return IsarCore.readString(reader, 5) ?? '';
+    case 6:
       {
-        final value = IsarCore.readLong(reader, 5);
+        final value = IsarCore.readLong(reader, 6);
         if (value == -9223372036854775808) {
           return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
         } else {
@@ -161,9 +171,9 @@ dynamic deserializeLeafModelProp(IsarReader reader, int property) {
               .toLocal();
         }
       }
-    case 6:
+    case 7:
       {
-        final json = isarJsonDecode(IsarCore.readString(reader, 6) ?? 'null');
+        final json = isarJsonDecode(IsarCore.readString(reader, 7) ?? 'null');
         if (json is Map<String, dynamic>) {
           return json;
         } else {
@@ -180,6 +190,7 @@ sealed class _LeafModelUpdate {
     required int id,
     String? uid,
     String? type,
+    double? accuracy,
     String? createdBy,
     DateTime? createdAt,
   });
@@ -195,6 +206,7 @@ class _LeafModelUpdateImpl implements _LeafModelUpdate {
     required int id,
     Object? uid = ignore,
     Object? type = ignore,
+    Object? accuracy = ignore,
     Object? createdBy = ignore,
     Object? createdAt = ignore,
   }) {
@@ -203,8 +215,9 @@ class _LeafModelUpdateImpl implements _LeafModelUpdate {
         ], {
           if (uid != ignore) 1: uid as String?,
           if (type != ignore) 2: type as String?,
-          if (createdBy != ignore) 4: createdBy as String?,
-          if (createdAt != ignore) 5: createdAt as DateTime?,
+          if (accuracy != ignore) 4: accuracy as double?,
+          if (createdBy != ignore) 5: createdBy as String?,
+          if (createdAt != ignore) 6: createdAt as DateTime?,
         }) >
         0;
   }
@@ -215,6 +228,7 @@ sealed class _LeafModelUpdateAll {
     required List<int> id,
     String? uid,
     String? type,
+    double? accuracy,
     String? createdBy,
     DateTime? createdAt,
   });
@@ -230,14 +244,16 @@ class _LeafModelUpdateAllImpl implements _LeafModelUpdateAll {
     required List<int> id,
     Object? uid = ignore,
     Object? type = ignore,
+    Object? accuracy = ignore,
     Object? createdBy = ignore,
     Object? createdAt = ignore,
   }) {
     return collection.updateProperties(id, {
       if (uid != ignore) 1: uid as String?,
       if (type != ignore) 2: type as String?,
-      if (createdBy != ignore) 4: createdBy as String?,
-      if (createdAt != ignore) 5: createdAt as DateTime?,
+      if (accuracy != ignore) 4: accuracy as double?,
+      if (createdBy != ignore) 5: createdBy as String?,
+      if (createdAt != ignore) 6: createdAt as DateTime?,
     });
   }
 }
@@ -252,6 +268,7 @@ sealed class _LeafModelQueryUpdate {
   int call({
     String? uid,
     String? type,
+    double? accuracy,
     String? createdBy,
     DateTime? createdAt,
   });
@@ -267,14 +284,16 @@ class _LeafModelQueryUpdateImpl implements _LeafModelQueryUpdate {
   int call({
     Object? uid = ignore,
     Object? type = ignore,
+    Object? accuracy = ignore,
     Object? createdBy = ignore,
     Object? createdAt = ignore,
   }) {
     return query.updateProperties(limit: limit, {
       if (uid != ignore) 1: uid as String?,
       if (type != ignore) 2: type as String?,
-      if (createdBy != ignore) 4: createdBy as String?,
-      if (createdAt != ignore) 5: createdAt as DateTime?,
+      if (accuracy != ignore) 4: accuracy as double?,
+      if (createdBy != ignore) 5: createdBy as String?,
+      if (createdAt != ignore) 6: createdAt as DateTime?,
     });
   }
 }
@@ -296,6 +315,7 @@ class _LeafModelQueryBuilderUpdateImpl implements _LeafModelQueryUpdate {
   int call({
     Object? uid = ignore,
     Object? type = ignore,
+    Object? accuracy = ignore,
     Object? createdBy = ignore,
     Object? createdAt = ignore,
   }) {
@@ -304,8 +324,9 @@ class _LeafModelQueryBuilderUpdateImpl implements _LeafModelQueryUpdate {
       return q.updateProperties(limit: limit, {
         if (uid != ignore) 1: uid as String?,
         if (type != ignore) 2: type as String?,
-        if (createdBy != ignore) 4: createdBy as String?,
-        if (createdAt != ignore) 5: createdAt as DateTime?,
+        if (accuracy != ignore) 4: accuracy as double?,
+        if (createdBy != ignore) 5: createdBy as String?,
+        if (createdAt != ignore) 6: createdAt as DateTime?,
       });
     } finally {
       q.close();
@@ -848,6 +869,100 @@ extension LeafModelQueryFilter
     });
   }
 
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition> accuracyEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition> accuracyGreaterThan(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition>
+      accuracyGreaterThanOrEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition> accuracyLessThan(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition>
+      accuracyLessThanOrEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition> accuracyBetween(
+    double lower,
+    double upper, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 4,
+          lower: lower,
+          upper: upper,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
   QueryBuilder<LeafModel, LeafModel, QAfterFilterCondition> createdByEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -855,7 +970,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -871,7 +986,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -887,7 +1002,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -902,7 +1017,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -918,7 +1033,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -934,7 +1049,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 4,
+          property: 5,
           lower: lower,
           upper: upper,
           caseSensitive: caseSensitive,
@@ -950,7 +1065,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         StartsWithCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -965,7 +1080,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EndsWithCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -979,7 +1094,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         ContainsCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -993,7 +1108,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         MatchesCondition(
-          property: 4,
+          property: 5,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -1005,7 +1120,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const EqualCondition(
-          property: 4,
+          property: 5,
           value: '',
         ),
       );
@@ -1017,7 +1132,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const GreaterCondition(
-          property: 4,
+          property: 5,
           value: '',
         ),
       );
@@ -1030,7 +1145,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -1044,7 +1159,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -1058,7 +1173,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -1071,7 +1186,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -1085,7 +1200,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -1099,7 +1214,7 @@ extension LeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 5,
+          property: 6,
           lower: lower,
           upper: upper,
         ),
@@ -1166,11 +1281,23 @@ extension LeafModelQuerySortBy on QueryBuilder<LeafModel, LeafModel, QSortBy> {
     });
   }
 
+  QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByAccuracy() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4);
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByAccuracyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, sort: Sort.desc);
+    });
+  }
+
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByCreatedBy(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
-        4,
+        5,
         caseSensitive: caseSensitive,
       );
     });
@@ -1180,7 +1307,7 @@ extension LeafModelQuerySortBy on QueryBuilder<LeafModel, LeafModel, QSortBy> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
-        4,
+        5,
         sort: Sort.desc,
         caseSensitive: caseSensitive,
       );
@@ -1189,25 +1316,25 @@ extension LeafModelQuerySortBy on QueryBuilder<LeafModel, LeafModel, QSortBy> {
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5);
+      return query.addSortBy(6);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5, sort: Sort.desc);
+      return query.addSortBy(6, sort: Sort.desc);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByToJson() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(6);
+      return query.addSortBy(7);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> sortByToJsonDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(6, sort: Sort.desc);
+      return query.addSortBy(7, sort: Sort.desc);
     });
   }
 }
@@ -1254,41 +1381,53 @@ extension LeafModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByAccuracy() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4);
+    });
+  }
+
+  QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByAccuracyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, sort: Sort.desc);
+    });
+  }
+
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByCreatedBy(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(4, caseSensitive: caseSensitive);
+      return query.addSortBy(5, caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByCreatedByDesc(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(4, sort: Sort.desc, caseSensitive: caseSensitive);
+      return query.addSortBy(5, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5);
+      return query.addSortBy(6);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5, sort: Sort.desc);
+      return query.addSortBy(6, sort: Sort.desc);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByToJson() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(6);
+      return query.addSortBy(7);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterSortBy> thenByToJsonDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(6, sort: Sort.desc);
+      return query.addSortBy(7, sort: Sort.desc);
     });
   }
 }
@@ -1315,22 +1454,28 @@ extension LeafModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LeafModel, LeafModel, QAfterDistinct> distinctByAccuracy() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(4);
+    });
+  }
+
   QueryBuilder<LeafModel, LeafModel, QAfterDistinct> distinctByCreatedBy(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(4, caseSensitive: caseSensitive);
+      return query.addDistinctBy(5, caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterDistinct> distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(5);
+      return query.addDistinctBy(6);
     });
   }
 
   QueryBuilder<LeafModel, LeafModel, QAfterDistinct> distinctByToJson() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(6);
+      return query.addDistinctBy(7);
     });
   }
 }
@@ -1361,22 +1506,28 @@ extension LeafModelQueryProperty1
     });
   }
 
-  QueryBuilder<LeafModel, String, QAfterProperty> createdByProperty() {
+  QueryBuilder<LeafModel, double, QAfterProperty> accuracyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(4);
     });
   }
 
-  QueryBuilder<LeafModel, DateTime, QAfterProperty> createdAtProperty() {
+  QueryBuilder<LeafModel, String, QAfterProperty> createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<LeafModel, DateTime, QAfterProperty> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
     });
   }
 
   QueryBuilder<LeafModel, Map<String, dynamic>, QAfterProperty>
       toJsonProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(6);
+      return query.addProperty(7);
     });
   }
 }
@@ -1407,22 +1558,28 @@ extension LeafModelQueryProperty2<R>
     });
   }
 
-  QueryBuilder<LeafModel, (R, String), QAfterProperty> createdByProperty() {
+  QueryBuilder<LeafModel, (R, double), QAfterProperty> accuracyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(4);
     });
   }
 
-  QueryBuilder<LeafModel, (R, DateTime), QAfterProperty> createdAtProperty() {
+  QueryBuilder<LeafModel, (R, String), QAfterProperty> createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<LeafModel, (R, DateTime), QAfterProperty> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
     });
   }
 
   QueryBuilder<LeafModel, (R, Map<String, dynamic>), QAfterProperty>
       toJsonProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(6);
+      return query.addProperty(7);
     });
   }
 }
@@ -1453,22 +1610,28 @@ extension LeafModelQueryProperty3<R1, R2>
     });
   }
 
-  QueryBuilder<LeafModel, (R1, R2, String), QOperations> createdByProperty() {
+  QueryBuilder<LeafModel, (R1, R2, double), QOperations> accuracyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(4);
     });
   }
 
-  QueryBuilder<LeafModel, (R1, R2, DateTime), QOperations> createdAtProperty() {
+  QueryBuilder<LeafModel, (R1, R2, String), QOperations> createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<LeafModel, (R1, R2, DateTime), QOperations> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
     });
   }
 
   QueryBuilder<LeafModel, (R1, R2, Map<String, dynamic>), QOperations>
       toJsonProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(6);
+      return query.addProperty(7);
     });
   }
 }
@@ -1499,6 +1662,10 @@ const EmbeddedLeafModelSchema = IsarGeneratedSchema(
         type: IsarType.longList,
       ),
       IsarPropertySchema(
+        name: 'accuracy',
+        type: IsarType.double,
+      ),
+      IsarPropertySchema(
         name: 'createdBy',
         type: IsarType.string,
       ),
@@ -1527,9 +1694,10 @@ int serializeEmbeddedLeafModel(IsarWriter writer, EmbeddedLeafModel object) {
     }
     IsarCore.endList(writer, listWriter);
   }
-  IsarCore.writeString(writer, 4, object.createdBy);
+  IsarCore.writeDouble(writer, 4, object.accuracy);
+  IsarCore.writeString(writer, 5, object.createdBy);
   IsarCore.writeLong(
-      writer, 5, object.createdAt.toUtc().microsecondsSinceEpoch);
+      writer, 6, object.createdAt.toUtc().microsecondsSinceEpoch);
   return 0;
 }
 
@@ -1557,11 +1725,13 @@ EmbeddedLeafModel deserializeEmbeddedLeafModel(IsarReader reader) {
       }
     }
   }
+  final double _accuracy;
+  _accuracy = IsarCore.readDouble(reader, 4);
   final String _createdBy;
-  _createdBy = IsarCore.readString(reader, 4) ?? '';
+  _createdBy = IsarCore.readString(reader, 5) ?? '';
   final DateTime _createdAt;
   {
-    final value = IsarCore.readLong(reader, 5);
+    final value = IsarCore.readLong(reader, 6);
     if (value == -9223372036854775808) {
       _createdAt =
           DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
@@ -1574,6 +1744,7 @@ EmbeddedLeafModel deserializeEmbeddedLeafModel(IsarReader reader) {
     uid: _uid,
     type: _type,
     image: _image,
+    accuracy: _accuracy,
     createdBy: _createdBy,
     createdAt: _createdAt,
   );
@@ -2043,6 +2214,104 @@ extension EmbeddedLeafModelQueryFilter
   }
 
   QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyGreaterThan(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyGreaterThanOrEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyLessThan(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyLessThanOrEqualTo(
+    double value, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 4,
+          value: value,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
+      accuracyBetween(
+    double lower,
+    double upper, {
+    double epsilon = Filter.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 4,
+          lower: lower,
+          upper: upper,
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<EmbeddedLeafModel, EmbeddedLeafModel, QAfterFilterCondition>
       createdByEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2050,7 +2319,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2066,7 +2335,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2082,7 +2351,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2098,7 +2367,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2114,7 +2383,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2131,7 +2400,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 4,
+          property: 5,
           lower: lower,
           upper: upper,
           caseSensitive: caseSensitive,
@@ -2148,7 +2417,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         StartsWithCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2164,7 +2433,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EndsWithCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2177,7 +2446,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         ContainsCondition(
-          property: 4,
+          property: 5,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2190,7 +2459,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         MatchesCondition(
-          property: 4,
+          property: 5,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -2203,7 +2472,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const EqualCondition(
-          property: 4,
+          property: 5,
           value: '',
         ),
       );
@@ -2215,7 +2484,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const GreaterCondition(
-          property: 4,
+          property: 5,
           value: '',
         ),
       );
@@ -2229,7 +2498,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -2243,7 +2512,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -2257,7 +2526,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -2271,7 +2540,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -2285,7 +2554,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
         ),
       );
@@ -2300,7 +2569,7 @@ extension EmbeddedLeafModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 5,
+          property: 6,
           lower: lower,
           upper: upper,
         ),

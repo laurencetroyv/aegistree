@@ -1,6 +1,7 @@
 import 'package:aegistree/src/src.dart';
 
 class SolutionEntity {
+  final String id;
   final String name;
   final String solution;
   final String learnMore;
@@ -8,6 +9,7 @@ class SolutionEntity {
   final ActionEntity requirements;
 
   SolutionEntity({
+    required this.id,
     required this.name,
     required this.solution,
     required this.learnMore,

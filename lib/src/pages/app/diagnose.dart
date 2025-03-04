@@ -24,6 +24,8 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
   late Uint8List bytes;
   bool detectionDone = false;
   late String diseaseName;
+  late String id;
+  late double accuracy;
 
   @override
   Widget build(BuildContext context) {
@@ -130,17 +132,20 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     final first = response.entries.first;
 
                     setState(() {
-                      diseaseName =
-                          "${first.key.replaceAll("_", " ")} - ${first.value.roundToDouble()}";
+                      id = first.value['id'];
+                      diseaseName = first.key.replaceAll("_", " ");
+                      accuracy = first.value['confidence'];
                       detectionDone = true;
                     });
 
-                    final disease = ref
+                    final disease = await ref
                         .read(diseaseProvider.notifier)
                         .addDisease(
-                            diseaseName, "Something Description", bytes);
+                            id, diseaseName, "Something Description", bytes);
 
-                    ref.read(leafsProvider.notifier).addLeaf(disease.id, bytes);
+                    ref
+                        .read(leafsProvider.notifier)
+                        .addLeaf(disease.id, bytes, accuracy);
                   },
                   style: style,
                   child: const Text("DETECT"),
@@ -154,7 +159,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                 children: [
                   const Inter("Type of Disease: "),
                   Inter(
-                    diseaseName,
+                    '$diseaseName - ${accuracy.round().toString()}%',
                     color: const Color(0xFFEA592C),
                   ),
                 ],
@@ -191,9 +196,8 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
-                        final solutions = ref
-                            .read(solutionProvider.notifier)
-                            .getSolution(diseaseName);
+                        final solutions =
+                            ref.read(solutionProvider.notifier).getSolution(id);
                         return Dialog(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
@@ -201,7 +205,7 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Inter(
-                                  "$diseaseName Solution",
+                                  "${solutions?.name ?? diseaseName} Solution",
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   textAlign: TextAlign.center,
@@ -222,7 +226,9 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                                     ],
                                   )
                                 else
-                                  SolutionBullet(solutions.solution),
+                                  SingleChildScrollView(
+                                      child:
+                                          SolutionBullet(solutions.solution)),
                               ],
                             ),
                           ),
@@ -262,9 +268,8 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                     await showDialog(
                       context: context,
                       builder: (context) {
-                        final solutions = ref
-                            .read(solutionProvider.notifier)
-                            .getSolution(diseaseName);
+                        final solutions =
+                            ref.read(solutionProvider.notifier).getSolution(id);
 
                         return Dialog(
                           child: Padding(
@@ -294,7 +299,9 @@ class _DiagnoseState extends ConsumerState<Diagnose> {
                                     ],
                                   )
                                 else
-                                  SolutionBullet(solutions.learnMore)
+                                  SingleChildScrollView(
+                                      child:
+                                          SolutionBullet(solutions.learnMore))
                               ],
                             ),
                           ),

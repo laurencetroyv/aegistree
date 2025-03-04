@@ -6,7 +6,7 @@ part of 'solution_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$solutionHash() => r'1691eac1ed9786151d69410d12683cdb3f3a7a48';
+String _$solutionHash() => r'49e863a0a904a58f0288ba16c8012cf6d7a9ba79';
 
 /// See also [Solution].
 @ProviderFor(Solution)

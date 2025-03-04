@@ -6,7 +6,7 @@ part of 'diseases_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$diseaseHash() => r'0f3d8e7ec9b440be7660aed635e2311e0ee4d46d';
+String _$diseaseHash() => r'39cd31aad05fe6669aa964c138e77316c3109716';
 
 /// See also [Disease].
 @ProviderFor(Disease)

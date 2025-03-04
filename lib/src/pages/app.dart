@@ -1,3 +1,4 @@
+import 'package:aegistree/src/pages/app/reports.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,8 +29,9 @@ class _AppState extends ConsumerState<App> {
   }
 
   void _onMenuIconTapped() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Koho(kUnimplementedFeature)),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Reports()),
     );
   }
 
@@ -53,7 +55,9 @@ class _AppState extends ConsumerState<App> {
     final appBar = AppBar(
       title: _index != 2 ? avatarIcon : learningResources,
       actions: [
-        IconButton(onPressed: _onMenuIconTapped, icon: const Icon(Icons.menu))
+        IconButton(
+            onPressed: _onMenuIconTapped,
+            icon: const Icon(Icons.data_exploration))
       ],
     );
 

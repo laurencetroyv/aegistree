@@ -4,6 +4,7 @@ import 'package:aegistree/src/src.dart';
 
 class DiseaseEntity {
   final String id;
+  final String diseaseId;
   final String name;
   final String description;
   final Uint8List image;
@@ -13,6 +14,7 @@ class DiseaseEntity {
 
   DiseaseEntity({
     required this.id,
+    required this.diseaseId,
     required this.name,
     required this.description,
     required this.image,
@@ -23,6 +25,7 @@ class DiseaseEntity {
 
   DiseaseModel get toModel => DiseaseModel(
         uid: id,
+        diseaseId: diseaseId,
         name: name,
         description: description,
         image: image,
@@ -34,6 +37,7 @@ class DiseaseEntity {
   factory DiseaseEntity.fromModel(DiseaseModel entity) {
     return DiseaseEntity(
       id: entity.uid,
+      diseaseId: entity.diseaseId,
       name: entity.name,
       description: entity.description,
       image: Uint8List.fromList(entity.image),
@@ -46,7 +50,6 @@ class DiseaseEntity {
   Map<String, dynamic> get toJson => {
         'name': name,
         'description': description,
-        'image': image.toList(),
         'createdAt': createdAt.toIso8601String(),
         'createdBy': createdBy,
         'updatedAt': updatedAt?.toIso8601String(),
