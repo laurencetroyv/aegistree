@@ -1,0 +1,2 @@
+F:/comission/grace/aegistree/android/app/.cxx/Debug/2u5u6y93/armeabi-v7a/CMakeFiles/edit_cache.dir
+F:/comission/grace/aegistree/android/app/.cxx/Debug/2u5u6y93/armeabi-v7a/CMakeFiles/rebuild_cache.dir
