@@ -6,7 +6,7 @@ part of 'user_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$usersHash() => r'737f97de51a3939209031d7e35b982fdfa6beb54';
+String _$usersHash() => r'5f9128aa528f975853796a6d09279f07057b57c3';
 
 /// See also [Users].
 @ProviderFor(Users)
@@ -21,4 +21,4 @@ final usersProvider = NotifierProvider<Users, UserEntity?>.internal(
 
 typedef _$Users = Notifier<UserEntity?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

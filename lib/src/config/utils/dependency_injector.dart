@@ -5,11 +5,9 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:isar/isar.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:aegistree/src/src.dart';
 
 import 'firebase_options.dart';
 
@@ -19,7 +17,7 @@ late final FirebaseAuth auth;
 late final FirebaseFirestore db;
 late final Uuid uuid;
 late final List<CameraDescription> cameras;
-late final Isar isar;
+// late final Isar isar;
 
 class DependencyInjector {
   static final DependencyInjector _singleton = DependencyInjector._internal();
@@ -36,7 +34,7 @@ class DependencyInjector {
     cameras = await availableCameras();
 
     // Initialize firebase
-    await _isar();
+    // await _isar();
     await _firebase();
   }
 
@@ -54,17 +52,17 @@ class DependencyInjector {
     db = FirebaseFirestore.instance;
   }
 
-  Future<void> _isar() async {
-    final directory = await getApplicationDocumentsDirectory();
-    isar = await Isar.openAsync(
-      schemas: [
-        UserModelSchema,
-        LeafModelSchema,
-        ArticleModelSchema,
-        DiseaseModelSchema,
-        LastSyncModelSchema,
-      ],
-      directory: directory.path,
-    );
-  }
+  // Future<void> _isar() async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   isar = await Isar.openAsync(
+  //     schemas: [
+  //       UserModelSchema,
+  //       LeafModelSchema,
+  //       ArticleModelSchema,
+  //       DiseaseModelSchema,
+  //       LastSyncModelSchema,
+  //     ],
+  //     directory: directory.path,
+  //   );
+  // }
 }

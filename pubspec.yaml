@@ -44,7 +44,7 @@ dependencies:
   uuid: ^4.5.1
   intl: ^0.20.2
   camera: ^0.11.1
-  tflite_flutter: ^0.11.0
+  # tflite_flutter: ^0.11.0
   fl_chart: ^0.71.0
   file_picker: ^10.1.2
   image: ^4.5.4
@@ -56,12 +56,12 @@ dependencies:
   cloud_firestore: ^5.6.6
   ionicons: ^0.2.2
   google_sign_in: ^6.3.0
-  isar:
-    hosted: https://pub.isar-community.dev
-    version: ^4.0.3
-  isar_flutter_libs:
-    hosted: https://pub.isar-community.dev
-    version: ^4.0.3
+  # isar:
+  #   hosted: https://pub.isar-community.dev
+  #   version: ^4.0.3
+  # isar_flutter_libs:
+  #   hosted: https://pub.isar-community.dev
+  #   version: ^4.0.3
   path_provider: ^2.1.5
   firebase_app_check: ^0.3.2
   http: ^1.3.0
@@ -98,7 +98,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/diseases/
-    - assets/models/
     # - assets/images/icons/
     # - assets/images/plant-hand.png
     # - assets/images/small-leaf.png

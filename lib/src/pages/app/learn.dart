@@ -26,31 +26,25 @@ class Learn extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
                       offset: const Offset(0, 4),
                       blurRadius: 4,
                       color: black60,
-                    )
+                    ),
                   ],
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
                     color: white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: const BoxDecoration(
                       gradient: gradient,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Row(
                       children: [
@@ -96,11 +90,11 @@ class Learn extends ConsumerWidget {
                         physics: const AlwaysScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                        ),
+                              crossAxisCount: 2,
+                              childAspectRatio: 1,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
                         itemCount: diseases.length,
                         itemBuilder: (context, index) {
                           final disease = diseases[index];
@@ -108,9 +102,11 @@ class Learn extends ConsumerWidget {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) {
-                                  return DetailedDiseases(disease);
-                                }),
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return DetailedDiseases(disease);
+                                  },
+                                ),
                               );
                             },
                             child: Container(
@@ -129,8 +125,10 @@ class Learn extends ConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                        child: Image.memory(
-                                            disease.disease.image)),
+                                      child: Image.memory(
+                                        disease.disease.image,
+                                      ),
+                                    ),
                                     const Gap(12),
                                     Koho(
                                       disease.disease.name,
@@ -138,7 +136,7 @@ class Learn extends ConsumerWidget {
                                       color: const Color(0xFF247408),
                                       textAlign: TextAlign.center,
                                       shadow: [defaultShadow],
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -215,7 +213,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "0",
-          diseaseId: "0",
           name: diseaseTypes[0],
           description:
               "Anthracnoses, meaning blackenings, are diseases of the foliage, stems, or fruits that typically appear as dark-colored spots or sunken lesions with a slightly raised rim. Some cause twig or branch dieback. In fruit infections, anthracnoses often have a prolonged latent stage. In some fruit crops, the spots are raised and have corky surfaces. Anthracnose diseases of fruit often result in fruit drop and fruit rot. Anthracnoses (from anthrax=carbon=black) are caused by fungi that produce conidia within black acervuli. Four ascomycetous fungi, Diplocarpon, Elsinoe, Glomerella, and Gnomonia, are responsible for most anthracnose diseases. They are found in nature mostly in their conidial stage and can overwinter as mycelium or conidia.",
@@ -234,7 +231,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "1",
-          diseaseId: "1",
           name: diseaseTypes[1],
           description:
               "Black spot, common disease of a variety of plants caused by species of Pseudomonas bacteria or by any number of fungus species in the genera Asterina, Asterinella, Diplotheca, Glomerella, Gnomonia, Schizothyrium, Placosphaeria, and Stigmea. Infections occur during damp periods and appear as round to irregular black spots on leaves and sometimes on petioles, stems, and flower parts of susceptible plants.",
@@ -252,7 +248,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "2",
-          diseaseId: "2",
           name: diseaseTypes[2],
           description:
               "Blight is a general and extremely rapid browning and death of leaves, branches twigs, and floral organs. Most blights are caused by bacterial or fungal infestations, which usually attack the shoots and other young, rapidly growing tissues of a plant. Fungal and bacterial blights are most apt to occur under cool moist conditions.",
@@ -270,7 +265,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "3",
-          diseaseId: "3",
           name: diseaseTypes[3],
           description:
               "Relatively few canker diseases are caused by bacteria, but some of them are widespread and devastating. In many bacterial cankers, the canker symptoms on stem, branches, or twigs are accompanied by direct symptoms on fruits, leaves, buds, or blossoms that may be at least as important in the overall effect of the disease on the tree as are the cankers. ",
@@ -288,7 +282,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "4",
-          diseaseId: "4",
           name: diseaseTypes[4],
           description:
               "Downy mildews are primarily foliage blights. They attact and spread rapidly in young, tender green leaf, twig, and fruit tissues. They develop when a film of water is present on the plant tissues and the relative humidity in the air is high during cool or warm, but not hot, periods. Downy mildews can cause severe losses in short periods of time. Downy mildews often cause rapid and severe losses of young crop plants still in the seedbed or in the field. They often destroy from 40 to 90% of the young plants or young shoots in the field, causing heavy or total losses of crop yields. The severity of loss depends on the prolonged presence of wet, cool weather during which the downy mildews sporulate profusely, cause numerous new infections, and spread into and rapidly kill young succulent tissues. In cool, wet weather downy mildews are often uncontrollable, checked only when the weather turns hot and dry. Appearance of white downy growth in patches on the lower surface of the leaves and yellow discolouration correspondingly on the upper surface. Downy mildew fungi are obligate parasites belonging to the family peronosporaceae of the subdivision Mastigomycotina that cause downy mildew disease. They produce sporangia during asexual reproduction and oospores during sexual reproduction. Sporangiophore branching characters of genera, which cause downy mildew diseases are given below.",
@@ -306,7 +299,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "5",
-          diseaseId: "450ce5c9-8be4-4e44-a037-b2ab6072fd72",
           name: diseaseTypes[5],
           description:
               "Powdery mildews are probably the most common, conspicuous, widespread, and easily recognizable plant diseases. They affect all kinds of plants except gymnosperms.",
@@ -324,7 +316,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "6",
-          diseaseId: "3d84a4ec-9edd-4979-a727-6e451d95f56c",
           name: diseaseTypes[6],
           description:
               "Rusts, caused by Basidiomycetes of the order Uredinales, are among the most destructive plant diseases. Rust fungi attack mostly leaves and stems. Rust infections usually appear as numerous rusty, orange, yellow, or even white-colored spots that rupture the epidermis.",
@@ -342,7 +333,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "7",
-          diseaseId: "7",
           name: diseaseTypes[7],
           description:
               "Shot hole disease, or coryneum blight, is caused by the fungus Wilsonomyces carpophilus. A perforated appearance of a leaf as the dead areas of local lesion drop out.",
@@ -360,7 +350,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "8",
-          diseaseId: "8",
           name: diseaseTypes[8],
           description:
               "Leaf spots is a localized lesions on host leaves consisting of dead and collapsed cells. Discrete lesions of dead cells on leaf tissue between or on leaf veins, often with a light-colored center and a distinct darkcolored border and sometimes accompanied by a yellow halo; fruiting structures of fungus often evident in dead tissue",
@@ -378,7 +367,6 @@ class Learn extends ConsumerWidget {
       LearnEntity(
         disease: DiseaseEntity(
           id: "9",
-          diseaseId: "9",
           name: diseaseTypes[9],
           description:
               "Sooty molds appear on the leaves or stems of plants as a superficial, black growth of mycelium forming a film or crust on these plant parts. Sooty molds may be found on all types of plants. They are most common in warm, humid weather. Sooty molds are caused by several species of fungi of various types, but primarily dark-colored Ascomycetes of the order Capnodiales. These fungi, e.g., Capnodium, are not parasitic but live off honeydew, the sugary deposit forming on plant parts from the droppings of certain insects, particularly aphids and scale insects. The fungal growth is so abundant that it gives the leaf a black, sooty appearance and interferes with the amount of light that reaches the plant. This mycelium soemtimes forms a black papery layer that can be peeled off from the underlying leaf. The presence of sooty mold fungi is usually of rather minor importance to the health of the plant, but it does indicate the presence of insects and may be a warning of a severe aphid or scale problem.",

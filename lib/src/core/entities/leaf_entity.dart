@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'package:aegistree/src/src.dart';
+// import 'package:aegistree/src/src.dart';
 
 class LeafEntity {
   final String id;
@@ -21,30 +21,30 @@ class LeafEntity {
 
   String get uid => id.split("-")[0];
 
-  LeafModel get toModel => LeafModel(
-        uid: uid,
-        type: type,
-        image: image.toList(),
-        accuracy: accuracy,
-        createdBy: createdBy,
-        createdAt: createdAt,
-      );
+  // LeafModel get toModel => LeafModel(
+  //       uid: uid,
+  //       type: type,
+  //       image: image.toList(),
+  //       accuracy: accuracy,
+  //       createdBy: createdBy,
+  //       createdAt: createdAt,
+  //     );
 
-  factory LeafEntity.fromModel(LeafModel entity) {
-    return LeafEntity(
-      id: entity.uid,
-      type: entity.type,
-      accuracy: entity.accuracy,
-      createdBy: entity.createdBy,
-      image: Uint8List.fromList(entity.image),
-      createdAt: entity.createdAt,
-    );
-  }
+  // factory LeafEntity.fromModel(LeafModel entity) {
+  //   return LeafEntity(
+  //     id: entity.uid,
+  //     type: entity.type,
+  //     accuracy: entity.accuracy,
+  //     createdBy: entity.createdBy,
+  //     image: Uint8List.fromList(entity.image),
+  //     createdAt: entity.createdAt,
+  //   );
+  // }
 
   Map<String, dynamic> get toJson => {
-        "type": type,
-        "accuracy": accuracy,
-        "createdBy": createdBy,
-        "createdAt": createdAt.toIso8601String(),
-      };
+    "type": type,
+    "accuracy": accuracy,
+    "createdBy": createdBy,
+    "createdAt": createdAt.toIso8601String(),
+  };
 }

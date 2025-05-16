@@ -53,9 +53,7 @@ class _CameraScreenState extends State<CameraScreen> {
       GoogleFonts.inter().copyWith(fontWeight: FontWeight.w600),
     ),
     shape: WidgetStatePropertyAll(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   );
 
@@ -70,7 +68,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       final XFile image = await controller.takePicture();
 
-      final byte = image.readAsBytes();
+      final byte = await image.readAsBytes();
 
       controller.pausePreview();
 
@@ -108,12 +106,11 @@ class _CameraScreenState extends State<CameraScreen> {
                         child: FilledButton(
                           onPressed: () async {
                             Navigator.pop(context, byte);
-                            Navigator.pop(context, byte);
                           },
                           style: style,
                           child: const Text("Confirm"),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -126,9 +123,9 @@ class _CameraScreenState extends State<CameraScreen> {
       debugPrint('Error capturing image: $e');
       // Show error message to user
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error capturing image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error capturing image: $e')));
       }
     } finally {
       if (mounted) {
@@ -157,9 +154,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(
-                      'assets/images/camera-bg.png',
-                    ),
+                    image: AssetImage('assets/images/camera-bg.png'),
                   ),
                 ),
                 child: Stack(
@@ -238,7 +233,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

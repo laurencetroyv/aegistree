@@ -7,6 +7,7 @@ import 'package:flutter_to_pdf/flutter_to_pdf.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import 'package:aegistree/src/core/components/empty_chart.dart';
 import 'package:aegistree/src/core/core.dart';
 
 class Reports extends ConsumerStatefulWidget {
@@ -23,6 +24,13 @@ class _ReportsState extends ConsumerState<Reports> {
   final exportDelegate = ExportDelegate(
     options: const ExportOptions(pageFormatOptions: PageFormatOptions.a4()),
   );
+
+  // Add sorting state variables
+  int _sortColumnIndex = 1; // Default sort by date (uploaded)
+  bool _sortAscending = false; // Default sort by most recent first
+
+  // Disease filtering
+  Set<String> _selectedDiseases = {}; // Empty means show all
 
   final colors = [
     const Color(0xFF45C27A),
@@ -60,7 +68,8 @@ class _ReportsState extends ConsumerState<Reports> {
     final fromDate = dates[0]!;
     final toDate = dates[1]!;
     final now = DateTime.now();
-    final today = fromDate.year == now.year &&
+    final today =
+        fromDate.year == now.year &&
         fromDate.month == now.month &&
         fromDate.day == now.day &&
         toDate.year == now.year &&
@@ -84,23 +93,50 @@ class _ReportsState extends ConsumerState<Reports> {
       }
 
       // Create spots for the line chart
-      for (var date = fromDate;
-          date.isBefore(toDate.add(const Duration(days: 1)));
-          date = date.add(const Duration(days: 1))) {
+      for (
+        var date = fromDate;
+        date.isBefore(toDate.add(const Duration(days: 1)));
+        date = date.add(const Duration(days: 1))
+      ) {
         final dateStr = DateFormat('yyyy-MM-dd').format(date);
         final count = leafsByDate[dateStr]?.length ?? 0;
 
-        diseaseSpots[album.title]!.add(FlSpot(
-          date.difference(fromDate).inDays.toDouble(),
-          count.toDouble(),
-        ));
+        diseaseSpots[album.title]!.add(
+          FlSpot(date.difference(fromDate).inDays.toDouble(), count.toDouble()),
+        );
       }
     }
 
+    // Create a flat list of all leaves for sorting
+    final allLeaves = <Map<String, dynamic>>[];
+    for (var album in albums) {
+      // Skip if this disease is filtered out
+      if (_selectedDiseases.isNotEmpty &&
+          !_selectedDiseases.contains(album.title)) {
+        continue;
+      }
+
+      for (var leaf in album.leafs) {
+        if (leaf.createdAt.isAfter(fromDate) &&
+            leaf.createdAt.isBefore(toDate.add(const Duration(days: 1)))) {
+          allLeaves.add({
+            'id': leaf.uid,
+            'date': leaf.createdAt,
+            'dateStr': DateFormat('MM/dd/yy').format(leaf.createdAt),
+            'disease': album.title,
+            'severity': leaf.accuracy.roundToDouble(),
+            'leaf': leaf,
+            'album': album,
+          });
+        }
+      }
+    }
+
+    // Sort the leaves based on the current sort column and direction
+    _sortLeaves(allLeaves);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Report"),
-      ),
+      appBar: AppBar(title: const Text("Report")),
       body: ExportFrame(
         exportDelegate: exportDelegate,
         frameId: 'export_graph',
@@ -127,10 +163,12 @@ class _ReportsState extends ConsumerState<Reports> {
                         );
 
                         if (value != null) {
-                          final from =
-                              DateFormat('MMM d, yyyy').format(value[0]!);
-                          final to =
-                              DateFormat('MMM d, yyyy').format(value[1]!);
+                          final from = DateFormat(
+                            'MMM d, yyyy',
+                          ).format(value[0]!);
+                          final to = DateFormat(
+                            'MMM d, yyyy',
+                          ).format(value[1]!);
                           setState(() {
                             dates = value;
                             filteredText = "$from - $to";
@@ -139,7 +177,9 @@ class _ReportsState extends ConsumerState<Reports> {
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 4),
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.green.shade800,
                           borderRadius: BorderRadius.circular(4),
@@ -153,7 +193,9 @@ class _ReportsState extends ConsumerState<Reports> {
                     const Gap(8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(4),
@@ -166,41 +208,7 @@ class _ReportsState extends ConsumerState<Reports> {
 
                 // Line Chart
                 if (albums.isEmpty || today)
-                  AspectRatio(
-                    aspectRatio: 1.70,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 187, 233, 170),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.insert_chart_outlined,
-                              size: 48,
-                              color: Color(0xFF48BD1F),
-                            ),
-                            SizedBox(height: 16),
-                            InknutAntiqua(
-                              "No disease trends available yet",
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 8),
-                            Karla(
-                              "Add some leaves or filter to see disease trends over time",
-                              textAlign: TextAlign.center,
-                              color: Colors.black54,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                  AspectRatio(aspectRatio: 1.70, child: EmptyChart())
                 else
                   AspectRatio(
                     aspectRatio: 1.70,
@@ -227,8 +235,9 @@ class _ReportsState extends ConsumerState<Reports> {
                                 reservedSize: 30,
                                 interval: 1,
                                 getTitlesWidget: (value, meta) {
-                                  final date = fromDate
-                                      .add(Duration(days: value.toInt()));
+                                  final date = fromDate.add(
+                                    Duration(days: value.toInt()),
+                                  );
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
@@ -245,11 +254,12 @@ class _ReportsState extends ConsumerState<Reports> {
                             border: Border.all(color: Colors.black12),
                           ),
                           minX: 0,
-                          maxX: fromDate
-                              .difference(toDate)
-                              .inDays
-                              .abs()
-                              .toDouble(),
+                          maxX:
+                              fromDate
+                                  .difference(toDate)
+                                  .inDays
+                                  .abs()
+                                  .toDouble(),
                           lineBarsData: [
                             for (var i = 0; i < diseaseSpots.length; i++)
                               LineChartBarData(
@@ -274,102 +284,146 @@ class _ReportsState extends ConsumerState<Reports> {
                   spacing: 16,
                   runSpacing: 8,
                   children: [
+                    // Add an "All" option for legend
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _selectedDiseases.clear();
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              border: Border.all(
+                                color:
+                                    _selectedDiseases.isEmpty
+                                        ? Colors.black
+                                        : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          const Gap(4),
+                          Text(
+                            "All Diseases",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight:
+                                  _selectedDiseases.isEmpty
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     for (var i = 0; i < diseaseSpots.length; i++)
-                      _buildLegendItem(diseaseSpots.keys.elementAt(i), i)
+                      _buildLegendItem(diseaseSpots.keys.elementAt(i), i),
                   ],
                 ),
                 const Gap(24),
                 const Text(
                   'List of Detected Diseases',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 const Gap(8),
                 // Disease List Table
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade800,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'Date Range:',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                        const Gap(8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            filteredText,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.import_export),
-                          onPressed: () async {
-                            try {
-                              final exported =
-                                  exportDelegate.getFrame('export_graph');
-
-                              print(exported);
-                            } catch (error) {
-                              print(error);
-                            }
-                          },
-                        ),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade800,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'Date Range:',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        filteredText,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.import_export),
+                      onPressed: () async {
+                        try {
+                          exportDelegate.getFrame('export_graph');
+                        } catch (error) {
+                          print(error.toString());
+                        }
+                      },
                     ),
                   ],
                 ),
                 const Gap(16),
-
-                // Table
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                    headingRowColor:
-                        WidgetStateProperty.all(Colors.green.shade800),
+                    headingRowColor: WidgetStateProperty.all(
+                      Colors.green.shade800,
+                    ),
                     headingTextStyle: const TextStyle(color: Colors.white),
-                    columns: const [
-                      DataColumn(label: Text('ID')),
-                      DataColumn(label: Text('Uploaded')),
-                      DataColumn(label: Text('Disease')),
-                      DataColumn(label: Text('Severity')),
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    columns: [
+                      DataColumn(
+                        label: const Text('ID'),
+                        onSort: (columnIndex, ascending) {
+                          _onSort(columnIndex, ascending);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('Uploaded'),
+                        onSort: (columnIndex, ascending) {
+                          _onSort(columnIndex, ascending);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('Disease'),
+                        onSort: (columnIndex, ascending) {
+                          _onSort(columnIndex, ascending);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('Severity'),
+                        numeric: true, // This helps for sorting numeric values
+                        onSort: (columnIndex, ascending) {
+                          _onSort(columnIndex, ascending);
+                        },
+                      ),
                     ],
-                    rows: [
-                      for (var album in albums)
-                        ...album.leafs
-                            .where((leaf) =>
-                                leaf.createdAt.isAfter(fromDate) &&
-                                leaf.createdAt.isBefore(
-                                    toDate.add(const Duration(days: 1))))
-                            .map(
-                              (leaf) => DataRow(
-                                cells: [
-                                  DataCell(Text(leaf.uid)),
-                                  DataCell(Text(DateFormat('MM/dd/yy')
-                                      .format(leaf.createdAt))),
-                                  DataCell(Text(album.title)),
-                                  // You can implement severity logic here
-                                  DataCell(Text(
-                                      '${leaf.accuracy.roundToDouble()}%')),
-                                ],
-                              ),
-                            ),
-                    ],
+                    rows:
+                        allLeaves.map((item) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Text(item['id'])),
+                              DataCell(Text(item['dateStr'])),
+                              DataCell(Text(item['disease'])),
+                              DataCell(Text('${item['severity']}%')),
+                            ],
+                          );
+                        }).toList(),
                   ),
                 ),
               ],
@@ -380,18 +434,79 @@ class _ReportsState extends ConsumerState<Reports> {
     );
   }
 
+  void _onSort(int columnIndex, bool ascending) {
+    setState(() {
+      _sortColumnIndex = columnIndex;
+      _sortAscending = ascending;
+    });
+  }
+
+  void _sortLeaves(List<Map<String, dynamic>> leaves) {
+    switch (_sortColumnIndex) {
+      case 0: // ID
+        leaves.sort((a, b) {
+          final result = a['id'].compareTo(b['id']);
+          return _sortAscending ? result : -result;
+        });
+        break;
+      case 1: // Date (default)
+        leaves.sort((a, b) {
+          final result = a['date'].compareTo(b['date']);
+          return _sortAscending ? result : -result;
+        });
+        break;
+      case 2: // Disease
+        leaves.sort((a, b) {
+          final result = a['disease'].compareTo(b['disease']);
+          return _sortAscending ? result : -result;
+        });
+        break;
+      case 3: // Severity
+        leaves.sort((a, b) {
+          final result = a['severity'].compareTo(b['severity']);
+          return _sortAscending ? result : -result;
+        });
+        break;
+    }
+  }
+
   Widget _buildLegendItem(String label, int index) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 16,
-          height: 16,
-          color: getColor(index),
-        ),
-        const Gap(4),
-        Text(label, style: const TextStyle(fontSize: 12)),
-      ],
+    final isSelected = _selectedDiseases.contains(label);
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (isSelected) {
+            _selectedDiseases.remove(label);
+          } else {
+            _selectedDiseases = {label}; // Only show this disease
+          }
+        });
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 16,
+            height: 16,
+            decoration: BoxDecoration(
+              color: getColor(index),
+              border: Border.all(
+                color: isSelected ? Colors.black : Colors.transparent,
+                width: 2,
+              ),
+            ),
+          ),
+          const Gap(4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

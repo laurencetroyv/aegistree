@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:aegistree/src/core/components/empty_chart.dart';
 import 'package:aegistree/src/src.dart';
 
 class DiseaseDetectionChart extends ConsumerStatefulWidget {
@@ -15,131 +16,155 @@ class DiseaseDetectionChart extends ConsumerStatefulWidget {
 
 class _DiseaseDetectionChartState extends ConsumerState<DiseaseDetectionChart> {
   String? selectedDisease;
+  late int currentMonthIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set default month to current month
+    final now = DateTime.now();
+    currentMonthIndex = now.month - 1; // 0-based index (Jan = 0, Dec = 11)
+  }
 
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(chartProvider);
 
-    // Group data by month
-    final monthlyData = <String, Map<String, double>>{};
-    for (var item in data) {
-      monthlyData.putIfAbsent(item.month, () => {});
-      monthlyData[item.month]![item.name] = item.value;
+    final allMonths = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    if (currentMonthIndex >= allMonths.length) {
+      currentMonthIndex = allMonths.length - 1;
+    } else if (currentMonthIndex < 0) {
+      currentMonthIndex = 0;
     }
 
-    // Get unique disease names
+    final currentMonth = allMonths[currentMonthIndex];
+
     final diseases = data.map((e) => e.name).toSet().toList();
 
-    // Calculate total diseases
-    final totalDiseases = data.fold<double>(0, (sum, item) => sum + item.value);
+    final currentMonthData =
+        data.where((item) => item.month == currentMonth).toList();
 
-    if (data.isEmpty) {
-      return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 187, 233, 170),
-          borderRadius: BorderRadius.circular(15),
+    Widget monthNavigation = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            setState(() {
+              currentMonthIndex = (currentMonthIndex - 1) % 12;
+              if (currentMonthIndex < 0) {
+                currentMonthIndex = 11; // Handle negative index
+              }
+            });
+          },
         ),
-        padding: const EdgeInsets.symmetric(vertical: 32),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.insert_chart_outlined,
-                size: 48,
-                color: Color(0xFF48BD1F),
-              ),
-              SizedBox(height: 16),
-              InknutAntiqua(
-                "No disease trends available yet",
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 8),
-              Karla(
-                "Add some leaves or filter to see disease trends over time",
-                textAlign: TextAlign.center,
-                color: Colors.black54,
-              ),
-            ],
+        Container(
+          width: 100,
+          alignment: Alignment.center,
+          child: Text(
+            currentMonth,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
+        IconButton(
+          icon: const Icon(Icons.arrow_forward),
+          onPressed: () {
+            setState(() {
+              currentMonthIndex = (currentMonthIndex + 1) % 12;
+            });
+          },
+        ),
+      ],
+    );
+
+    if (currentMonthData.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [monthNavigation, EmptyChart()],
       );
     }
+
+    final totalDiseasesForMonth = currentMonthData.fold<double>(
+      0,
+      (sum, item) => sum + item.value,
+    );
+
+    final totalDiseases = data.fold<double>(0, (sum, item) => sum + item.value);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        monthNavigation,
         SizedBox(
-          height: 250,
+          height: 200,
           child: BarChart(
             BarChartData(
-              alignment: BarChartAlignment.spaceEvenly,
-              maxY: data.isEmpty
-                  ? 100
-                  : data.map((e) => e.value).reduce((a, b) => a > b ? a : b) *
-                      1.2,
-              barGroups: monthlyData.entries.map((entry) {
-                final month = entry.key;
-                final monthData = entry.value;
-
-                return BarChartGroupData(
-                  x: monthlyData.keys.toList().indexOf(month),
-                  barRods: diseases.map((disease) {
-                    final value = monthData[disease] ?? 0;
-                    final color =
-                        data.firstWhere((d) => d.name == disease).color;
-
-                    return BarChartRodData(
-                      toY: value,
-                      color: color.withOpacity(
-                          selectedDisease == null || selectedDisease == disease
-                              ? 1
-                              : 0.3),
-                      width: 25,
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(4)),
-                    );
-                  }).toList(),
-                );
-              }).toList(),
+              alignment: BarChartAlignment.center,
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    if (groupIndex < diseases.length) {
+                      return BarTooltipItem(
+                        '${diseases[groupIndex]}\n',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${rod.toY.toInt()} Detected',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              ),
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: AxisTitles(
                   axisNameWidget: const Text(
-                    'Month',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toInt() >= 0 &&
-                          value.toInt() < monthlyData.length) {
-                        return Text(monthlyData.keys.elementAt(value.toInt()));
-                      }
-                      return const Text('');
-                    },
-                    reservedSize: 25,
+                    'Diseases',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
                 leftTitles: AxisTitles(
                   axisNameWidget: const Text(
-                    'Number of Diseases',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    'Diseases',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   sideTitles: SideTitles(
                     showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      return Text(value.toInt().toString());
-                    },
                     reservedSize: 35,
+                    getTitlesWidget: (value, meta) {
+                      if (value == value.toInt() && value >= 0) {
+                        return Text(
+                          value.toInt().toString(),
+                          style: const TextStyle(fontSize: 10),
+                        );
+                      }
+                      return const Text('');
+                    },
                   ),
                 ),
                 topTitles: const AxisTitles(
@@ -150,50 +175,102 @@ class _DiseaseDetectionChartState extends ConsumerState<DiseaseDetectionChart> {
                 ),
               ),
               borderData: FlBorderData(show: false),
-              gridData: const FlGridData(show: false),
+              gridData: FlGridData(
+                show: true,
+                drawHorizontalLine: true,
+                drawVerticalLine: false,
+                horizontalInterval: 20,
+              ),
+              barGroups:
+                  diseases.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final disease = entry.value;
+
+                    final diseaseData = currentMonthData.firstWhere(
+                      (d) => d.name == disease,
+                    );
+
+                    final barOpacity =
+                        selectedDisease == null || selectedDisease == disease
+                            ? 1.0
+                            : 0.3;
+
+                    return BarChartGroupData(
+                      x: index,
+                      barRods: [
+                        BarChartRodData(
+                          toY: diseaseData.value,
+                          color: diseaseData.color.withOpacity(barOpacity),
+                          width: 20,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
+        // Disease legends
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: diseases.map((disease) {
-              final diseaseData = data.where((d) => d.name == disease);
-              final total =
-                  diseaseData.fold<double>(0, (sum, item) => sum + item.value);
+            children:
+                diseases.map((disease) {
+                  final diseaseData = currentMonthData.where(
+                    (d) => d.name == disease,
+                  );
+                  final value =
+                      diseaseData.isEmpty ? 0 : diseaseData.first.value;
 
-              return Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedDisease =
-                          selectedDisease == disease ? null : disease;
-                    });
-                  },
-                  child: ChartLegend(
-                    title: disease,
-                    count: '${total.toInt()} Detected',
-                    color: data
-                        .firstWhere((d) => d.name == disease)
-                        .color
-                        .withOpacity(selectedDisease == null ||
-                                selectedDisease == disease
-                            ? 1
-                            : 0.3),
-                  ),
-                ),
-              );
-            }).toList(),
+                  final Color diseaseColor =
+                      currentMonthData
+                          .firstWhere(
+                            (d) => d.name == disease,
+                            orElse: () => currentMonthData.first,
+                          )
+                          .color;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDisease =
+                              selectedDisease == disease ? null : disease;
+                        });
+                      },
+                      child: ChartLegend(
+                        title: disease,
+                        count: '${value.toInt()} Detected',
+                        color: diseaseColor.withOpacity(
+                          selectedDisease == null || selectedDisease == disease
+                              ? 1
+                              : 0.3,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
           ),
         ),
         const SizedBox(height: 8),
-        ChartLegend(
-          title: "Total",
-          count: '${totalDiseases.toInt()} Detected Disease',
+        Row(
+          children: [
+            ChartLegend(
+              title: "Monthly Total",
+              count: '${totalDiseasesForMonth.toInt()} Detected',
+            ),
+            const SizedBox(width: 16),
+            ChartLegend(
+              title: "All-Time Total",
+              count: '${totalDiseases.toInt()} Detected Disease',
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
       ],
     );
   }

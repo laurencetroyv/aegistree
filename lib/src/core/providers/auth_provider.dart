@@ -73,6 +73,19 @@ class Auth extends _$Auth {
         avatar = await storageRef.getData();
       }
 
+      final leafs =
+          await db.collection('leafs').where('createdBy', isEqualTo: uid).get();
+
+      final diseases =
+          await db
+              .collection('diseases')
+              .where('createdBy', isEqualTo: uid)
+              .get();
+
+      await ref.read(leafsProvider.notifier).addLeafs(leafs, uid);
+
+      await ref.read(diseaseProvider.notifier).addDiseases(diseases, uid);
+
       return UserEntity(
         id: uid,
         firstName: dbData["firstName"] ?? '',
@@ -82,9 +95,10 @@ class Auth extends _$Auth {
         phoneNumber: dbData["phoneNumber"] ?? '',
         avatar: avatar,
         createdAt: DateTime.parse(dbData["createdAt"]),
-        updatedAt: dbData["updatedAt"].isEmpty
-            ? DateTime.now()
-            : DateTime.parse(dbData["updatedAt"]),
+        updatedAt:
+            dbData["updatedAt"].isEmpty
+                ? DateTime.now()
+                : DateTime.parse(dbData["updatedAt"]),
       );
     } catch (e) {
       throw 'Failed to get user details: $e';
@@ -109,8 +123,9 @@ class Auth extends _$Auth {
 
       if (credential.user == null) throw 'Failed to create user';
 
-      await credential.user!
-          .updateDisplayName("$firstName $middleName $lastName");
+      await credential.user!.updateDisplayName(
+        "$firstName $middleName $lastName",
+      );
 
       await db.collection("users").doc(credential.user!.uid).set({
         "email": email,
@@ -120,7 +135,7 @@ class Auth extends _$Auth {
         "phoneNumber": phoneNumber,
         "avatar": false,
         "createdAt": DateTime.now().toIso8601String(),
-        "updatedAt": ""
+        "updatedAt": "",
       });
 
       final userDetails = await getUserDetails(credential.user!.uid);
@@ -130,8 +145,8 @@ class Auth extends _$Auth {
         e.code == 'weak-password'
             ? 'The password provided is too weak.'
             : e.code == 'email-already-in-use'
-                ? 'An account already exists for this email.'
-                : e.message ?? 'An error occurred during sign up.',
+            ? 'An account already exists for this email.'
+            : e.message ?? 'An error occurred during sign up.',
       );
     } catch (e) {
       state = AuthError('An unexpected error occurred: $e');
@@ -192,10 +207,7 @@ class Auth extends _$Auth {
   Future<void> signOut() async {
     try {
       state = const AuthInitial(); // Show loading state
-      await Future.wait([
-        _googleSignIn.signOut(),
-        _firebaseAuth.signOut(),
-      ]);
+      await Future.wait([_googleSignIn.signOut(), _firebaseAuth.signOut()]);
       state = const Unauthenticated();
     } catch (e) {
       state = AuthError('Failed to sign out: $e');

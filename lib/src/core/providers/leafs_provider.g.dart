@@ -6,7 +6,7 @@ part of 'leafs_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$leafsHash() => r'590c127d4c3675789549e9fd82a0b03222289686';
+String _$leafsHash() => r'dcbf53c77fa1f46d2c6c7c7c8516aec1e4001b81';
 
 /// See also [Leafs].
 @ProviderFor(Leafs)
@@ -21,4 +21,4 @@ final leafsProvider = NotifierProvider<Leafs, List<LeafEntity>>.internal(
 
 typedef _$Leafs = Notifier<List<LeafEntity>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

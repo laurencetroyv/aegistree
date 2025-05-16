@@ -1,8 +1,9 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-import 'package:isar/isar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:aegistree/src/src.dart';
@@ -11,124 +12,72 @@ part 'diseases_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Disease extends _$Disease {
-  late final UserEntity _user;
-
   @override
   List<DiseaseEntity> build() {
-    _user = ref.read(usersProvider)!;
-
-    syncDiseases();
-
-    final localDiseases = isar.diseaseModels.where().findAll();
-    return localDiseases
-        .map((model) => DiseaseEntity.fromModel(model))
-        .toList();
+    return [];
   }
 
-  Future<void> syncDiseases() async {
-    try {
-      final lastSync = isar.lastSyncModels
-              .where()
-              .typeEqualTo('disease')
-              .findFirst() ??
-          LastSyncModel()
-        ..type = 'disease'
-        ..timestamp = DateTime.fromMicrosecondsSinceEpoch(0);
+  Future<void> addDiseases(
+    QuerySnapshot<Map<String, dynamic>> diseases,
+    String id,
+  ) async {
+    List<DiseaseEntity> diseasesList = [];
 
-      final localChanges = isar.diseaseModels
-          .where()
-          .createdAtGreaterThan(lastSync.timestamp)
-          .findAll();
+    for (final doc in diseases.docs) {
+      final data = doc.data();
 
-      for (final disease in localChanges) {
-        await db.collection('diseases').doc(disease.uid).set(disease.toJson);
+      try {
+        final diseaseRef = storage.child("diseases/$id/${doc.id}");
 
-        final diseaseRef =
-            storage.child("diseases/${_user.id}/${disease.id}.png");
+        final image = await diseaseRef.getData();
 
-        await diseaseRef.putFile(
-          File.fromRawPath(Uint8List.fromList(disease.image)),
+        DiseaseEntity disease = DiseaseEntity(
+          id: doc.id,
+          name: data['name'],
+          description: data['description'],
+          image: image!,
+          createdAt: DateTime.parse(data['createdAt']),
+          createdBy: data['createdBy'],
         );
+
+        diseasesList.add(disease);
+      } catch (error) {
+        print("disease provider error: ${error.toString()}");
       }
-
-      final remoteChanges = await db
-          .collection('diseases')
-          .where('createdBy', isEqualTo: _user.id)
-          .where('createdAt',
-              isGreaterThan: lastSync.timestamp.toIso8601String())
-          .get();
-
-      await isar.writeAsync((isar) async {
-        for (final doc in remoteChanges.docs) {
-          final data = doc.data();
-
-          final diseaseRef =
-              storage.child("diseases/${_user.id}/${doc.id}.png");
-
-          final image = await diseaseRef.getData();
-
-          DiseaseModel disease = DiseaseEntity(
-            id: doc.id,
-            diseaseId: data['diseaseId'],
-            name: data['name'],
-            description: data['description'],
-            image: image!,
-            createdAt: data['createdAt'],
-            createdBy: data['createdBy'],
-          ).toModel
-            ..id = isar.diseaseModels.autoIncrement();
-
-          isar.diseaseModels.put(disease);
-        }
-
-        lastSync.timestamp = DateTime.now();
-        isar.lastSyncModels.put(lastSync);
-      });
-
-      // Update state with latest data
-      final updatedDiseases = isar.diseaseModels.where().findAll();
-      state = updatedDiseases
-          .map((model) => DiseaseEntity.fromModel(model))
-          .toList();
-    } catch (error) {
-      // On error, just load from local database
-      final localDiseases = isar.diseaseModels.where().findAll();
-      state =
-          localDiseases.map((model) => DiseaseEntity.fromModel(model)).toList();
     }
+
+    state = diseasesList;
   }
 
-  Future<DiseaseEntity> addDisease(String diseaseId, String name,
-      String description, Uint8List bytes) async {
+  Future<DiseaseEntity> addDisease(
+    String diseaseId,
+    String name,
+    String description,
+    Uint8List bytes,
+  ) async {
+    final user = ref.read(usersProvider);
     final index = checkDisease(name);
     if (index == -1) {
       final id = uuid.v4();
       final disease = DiseaseEntity(
         id: id,
-        diseaseId: diseaseId,
         name: name,
         description: description,
         image: bytes,
-        createdBy: _user.id,
+        createdBy: user?.id ?? 'unknown',
         createdAt: DateTime.now(),
       );
 
-      final model = disease.toModel..id = isar.diseaseModels.autoIncrement();
-
-      isar.writeAsync((isar) {
-        isar.diseaseModels.put(model);
-      });
-
       try {
-        db.collection('diseases').doc(disease.id).set(disease.toJson);
+        await db.collection('diseases').doc(disease.id).set(disease.toJson);
 
-        final image = storage.child('leafs/$id');
+        final image = storage.child('diseases/${user?.id ?? 'unknown'}/$id');
         await image.putData(disease.image);
       } catch (error) {
-        //
+        print(error.toString());
       }
 
-      syncDiseases();
+      // syncDiseases();
 
       state = [...state, disease];
       return disease;

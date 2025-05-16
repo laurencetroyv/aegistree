@@ -8,11 +8,7 @@ import 'package:aegistree/src/core/components/tab/history.dart';
 import 'package:aegistree/src/src.dart';
 
 class LeafDetails extends ConsumerWidget {
-  const LeafDetails(
-    this.leaf, {
-    super.key,
-    required this.collectionName,
-  });
+  const LeafDetails(this.leaf, {super.key, required this.collectionName});
 
   final LeafEntity leaf;
   final String collectionName;
@@ -56,8 +52,9 @@ class LeafDetails extends ConsumerWidget {
             initialChildSize: 0.7,
             builder: (context, scrollController) {
               final createdAt = DateFormat('MM/dd/yy').format(leaf.createdAt);
-              final disease =
-                  ref.read(diseaseProvider.notifier).findById(leaf.type);
+              final disease = ref
+                  .read(diseaseProvider.notifier)
+                  .findById(leaf.type);
 
               return Container(
                 decoration: const BoxDecoration(
@@ -79,15 +76,17 @@ class LeafDetails extends ConsumerWidget {
                                 Imprima(collectionName, color: Colors.black54),
                                 Row(
                                   children: [
-                                    const Imprima('Date:',
-                                        color: Colors.black54),
+                                    const Imprima(
+                                      'Date:',
+                                      color: Colors.black54,
+                                    ),
                                     const Gap(4),
                                     Imprima(
                                       createdAt,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -119,14 +118,18 @@ class LeafDetails extends ConsumerWidget {
                               Expanded(
                                 child: TabBarView(
                                   children: [
-                                    ActionTab(scrollController,
-                                        leaf: disease.diseaseId),
-                                    RequirementTab(scrollController,
-                                        leaf: disease.diseaseId),
+                                    ActionTab(
+                                      scrollController,
+                                      leaf: disease.id,
+                                    ),
+                                    RequirementTab(
+                                      scrollController,
+                                      leaf: disease.id,
+                                    ),
                                     HistoryTab(
                                       leaf.type,
                                       scrollController: scrollController,
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),

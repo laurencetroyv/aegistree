@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCwsoiuDj-9zgvAeg_4WPiMdnTVoCpxd9Q',
-    appId: '1:916388646081:android:ea081cb336f24bf3d99840',
+    appId: '1:916388646081:android:2d58a2cd8cce94bfd99840',
     messagingSenderId: '916388646081',
     projectId: 'tree-leaf-detection',
     storageBucket: 'tree-leaf-detection.appspot.com',
@@ -60,12 +60,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCsOU76yklbZqnVcJ0Xo6pjxNdRjToNJwU',
-    appId: '1:916388646081:ios:ef5120c17ae48cbfd99840',
+    appId: '1:916388646081:ios:d4682735e317f0d5d99840',
     messagingSenderId: '916388646081',
     projectId: 'tree-leaf-detection',
     storageBucket: 'tree-leaf-detection.appspot.com',
-    iosClientId: '916388646081-meu5br7qofha7ivriih0er5qolvpo6n5.apps.googleusercontent.com',
-    iosBundleId: 'com.example.aegistree',
+    iosClientId: '916388646081-lihla49c7gh0q6o01e4ls7vmma7n0snp.apps.googleusercontent.com',
+    iosBundleId: 'com.grace.aegistree',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

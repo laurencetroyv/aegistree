@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'package:aegistree/src/src.dart';
+// import 'package:aegistree/src/src.dart';
 
 class UserEntity {
   final String id;
@@ -30,15 +30,15 @@ class UserEntity {
 
   String get fullName => "$firstName $middleName $lastName";
 
-  UserModel get userModel => UserModel(
-        uid: id,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
-        avatar: avatar?.toList(),
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
+  // UserModel get userModel => UserModel(
+  //       uid: id,
+  //       firstName: firstName,
+  //       middleName: middleName,
+  //       lastName: lastName,
+  //       email: email,
+  //       phoneNumber: phoneNumber,
+  //       avatar: avatar?.toList(),
+  //       createdAt: createdAt,
+  //       updatedAt: updatedAt,
+  //     );
 }

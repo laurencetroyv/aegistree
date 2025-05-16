@@ -34,7 +34,7 @@ class Dashboard extends ConsumerWidget {
               fontWeight: FontWeight.w300,
               color: black60,
             ),
-            const Gap(32),
+            const Gap(16),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -44,30 +44,28 @@ class Dashboard extends ConsumerWidget {
               child: const DiseaseDetectionChart(),
             ),
             const Gap(32),
-            Expanded(
-              child: LeafAlbumGrid(
-                leafs,
-                maxImages: leafs.length <= 12 ? leafs.length : 12,
-                title: "Leaf Album",
-                moreButton: true,
-              ),
+            LeafAlbumGrid(
+              leafs,
+              maxImages: leafs.length <= 12 ? leafs.length : 12,
+              title: "Leaf Album",
+              moreButton: true,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return const Diagnose();
-            },
-          ));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const Diagnose();
+              },
+            ),
+          );
         },
         tooltip: 'Add New',
-        label: Text(
-          "+ Add New",
-          style: GoogleFonts.koHo(fontSize: 20),
-        ),
+        label: Text("+ Add New", style: GoogleFonts.koHo(fontSize: 20)),
       ),
     );
   }
